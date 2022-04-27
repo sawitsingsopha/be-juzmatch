@@ -1378,7 +1378,7 @@ class UploadHandler
             // $file_path = $this->get_upload_path($file->name);
             $file_path = '../upload/tem/'.$file->name;
 
-            // ‡™Á§«Ë“‡ªÁπ‰ø≈Ï∑—Ë«‰ªÀ√◊Õ‰¡Ë ¥È«¬ø—ß°Ï™—π is_file() == > return ture,false
+            // ‡πÄ‡∏ä‡πá‡∏Ñ‡∏ß‡πà‡∏≤‡πÄ‡∏õ‡πá‡∏ô‡πÑ‡∏ü‡∏•‡πå‡∏ó‡∏±‡πà‡∏ß‡πÑ‡∏õ‡∏´‡∏£‡∏∑‡∏≠‡πÑ‡∏°‡πà ‡∏î‡πâ‡∏ß‡∏¢‡∏ü‡∏±‡∏á‡∏Å‡πå‡∏ä‡∏±‡∏ô is_file() == > return ture,false
             $append_file = $content_range && is_file($file_path) && $file->size > $this->get_file_size($file_path);
 
             if ($uploaded_file && is_uploaded_file($uploaded_file)) {
@@ -1386,16 +1386,16 @@ class UploadHandler
                 if ($append_file) {
 
                     // file_put_contents(file , data)
-                    // file §◊Õ ∑’ËÕ¬ŸË‰ø≈Ï
-                    // data §◊Õ string ∑’ËµÈÕß°“√‡¢’¬π
+                    // file ‡∏Ñ‡∏∑‡∏≠ ‡∏ó‡∏µ‡πà‡∏≠‡∏¢‡∏π‡πà‡πÑ‡∏ü‡∏•‡πå
+                    // data ‡∏Ñ‡∏∑‡∏≠ string ‡∏ó‡∏µ‡πà‡∏ï‡πâ‡∏≠‡∏á‡∏Å‡∏≤‡∏£‡πÄ‡∏Ç‡∏µ‡∏¢‡∏ô
 
                     file_put_contents($file_path,fopen($uploaded_file, 'r'),FILE_APPEND);
                 } else {
 
-                    // ø—ß°Ï™—Ëπ move_uploaded_file „π PHP ‡ªÁπø—ß°Ï™—Ëπ∑’Ë‡Õ“‰«È¬È“¬‰ø≈Ï∑’Ë‡√“‰¥ÈÕ—∫‚À≈¥¢÷Èπ
-                    // Server ºË“π∑“ß form upload ‰ª‡°Á∫„π‚ø≈‡¥Õ√Ï„À¡Ë ¥Ÿ‰ª°Á§≈È“¬°—∫§” —Ëß copy ·µË«Ë“
-                    // ª≈Õ¥¿—¬°«Ë“
-                    // move_uploaded_file( ™◊ËÕ‰ø≈Ï , ª≈“¬∑“ß∑’Ë®–¬È“¬ )
+                    // ‡∏ü‡∏±‡∏á‡∏Å‡πå‡∏ä‡∏±‡πà‡∏ô move_uploaded_file ‡πÉ‡∏ô PHP ‡πÄ‡∏õ‡πá‡∏ô‡∏ü‡∏±‡∏á‡∏Å‡πå‡∏ä‡∏±‡πà‡∏ô‡∏ó‡∏µ‡πà‡πÄ‡∏≠‡∏≤‡πÑ‡∏ß‡πâ‡∏¢‡πâ‡∏≤‡∏¢‡πÑ‡∏ü‡∏•‡πå‡∏ó‡∏µ‡πà‡πÄ‡∏£‡∏≤‡πÑ‡∏î‡πâ‡∏≠‡∏±‡∏ö‡πÇ‡∏´‡∏•‡∏î‡∏Ç‡∏∂‡πâ‡∏ô
+                    // Server ‡∏ú‡πà‡∏≤‡∏ô‡∏ó‡∏≤‡∏á form upload ‡πÑ‡∏õ‡πÄ‡∏Å‡πá‡∏ö‡πÉ‡∏ô‡πÇ‡∏ü‡∏•‡πÄ‡∏î‡∏≠‡∏£‡πå‡πÉ‡∏´‡∏°‡πà ‡∏î‡∏π‡πÑ‡∏õ‡∏Å‡πá‡∏Ñ‡∏•‡πâ‡∏≤‡∏¢‡∏Å‡∏±‡∏ö‡∏Ñ‡∏≥‡∏™‡∏±‡πà‡∏á copy ‡πÅ‡∏ï‡πà‡∏ß‡πà‡∏≤
+                    // ‡∏õ‡∏•‡∏≠‡∏î‡∏†‡∏±‡∏¢‡∏Å‡∏ß‡πà‡∏≤
+                    // move_uploaded_file( ‡∏ä‡∏∑‡πà‡∏≠‡πÑ‡∏ü‡∏•‡πå , ‡∏õ‡∏•‡∏≤‡∏¢‡∏ó‡∏≤‡∏á‡∏ó‡∏µ‡πà‡∏à‡∏∞‡∏¢‡πâ‡∏≤‡∏¢ )
 
                     move_uploaded_file($uploaded_file, $file_path);
                 }
