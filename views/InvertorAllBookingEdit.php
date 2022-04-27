@@ -1,0 +1,261 @@
+<?php
+
+namespace PHPMaker2022\juzmatch;
+
+// Page object
+$InvertorAllBookingEdit = &$Page;
+?>
+<script>
+var currentTable = <?= JsonEncode($Page->toClientVar()) ?>;
+ew.deepAssign(ew.vars, { tables: { invertor_all_booking: currentTable } });
+var currentForm, currentPageID;
+var finvertor_all_bookingedit;
+loadjs.ready(["wrapper", "head"], function () {
+    var $ = jQuery;
+    // Form object
+    finvertor_all_bookingedit = new ew.Form("finvertor_all_bookingedit", "edit");
+    currentPageID = ew.PAGE_ID = "edit";
+    currentForm = finvertor_all_bookingedit;
+
+    // Add fields
+    var fields = currentTable.fields;
+    finvertor_all_bookingedit.addFields([
+        ["asset_id", [fields.asset_id.visible && fields.asset_id.required ? ew.Validators.required(fields.asset_id.caption) : null], fields.asset_id.isInvalid],
+        ["member_id", [fields.member_id.visible && fields.member_id.required ? ew.Validators.required(fields.member_id.caption) : null], fields.member_id.isInvalid],
+        ["date_booking", [fields.date_booking.visible && fields.date_booking.required ? ew.Validators.required(fields.date_booking.caption) : null, ew.Validators.datetime(fields.date_booking.clientFormatPattern)], fields.date_booking.isInvalid],
+        ["status_expire", [fields.status_expire.visible && fields.status_expire.required ? ew.Validators.required(fields.status_expire.caption) : null], fields.status_expire.isInvalid],
+        ["status_expire_reason", [fields.status_expire_reason.visible && fields.status_expire_reason.required ? ew.Validators.required(fields.status_expire_reason.caption) : null], fields.status_expire_reason.isInvalid],
+        ["payment_status", [fields.payment_status.visible && fields.payment_status.required ? ew.Validators.required(fields.payment_status.caption) : null], fields.payment_status.isInvalid],
+        ["uuser", [fields.uuser.visible && fields.uuser.required ? ew.Validators.required(fields.uuser.caption) : null], fields.uuser.isInvalid],
+        ["uip", [fields.uip.visible && fields.uip.required ? ew.Validators.required(fields.uip.caption) : null], fields.uip.isInvalid],
+        ["udate", [fields.udate.visible && fields.udate.required ? ew.Validators.required(fields.udate.caption) : null], fields.udate.isInvalid]
+    ]);
+
+    // Form_CustomValidate
+    finvertor_all_bookingedit.customValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
+        // Your custom validation code here, return false if invalid.
+        return true;
+    }
+
+    // Use JavaScript validation or not
+    finvertor_all_bookingedit.validateRequired = ew.CLIENT_VALIDATE;
+
+    // Dynamic selection lists
+    finvertor_all_bookingedit.lists.status_expire = <?= $Page->status_expire->toClientList($Page) ?>;
+    finvertor_all_bookingedit.lists.payment_status = <?= $Page->payment_status->toClientList($Page) ?>;
+    loadjs.done("finvertor_all_bookingedit");
+});
+</script>
+<script>
+loadjs.ready("head", function () {
+    // Write your table-specific client script here, no need to add script tags.
+});
+</script>
+<?php $Page->showPageHeader(); ?>
+<?php
+$Page->showMessage();
+?>
+<form name="finvertor_all_bookingedit" id="finvertor_all_bookingedit" class="<?= $Page->FormClassName ?>" action="<?= CurrentPageUrl(false) ?>" method="post">
+<?php if (Config("CHECK_TOKEN")) { ?>
+<input type="hidden" name="<?= $TokenNameKey ?>" value="<?= $TokenName ?>"><!-- CSRF token name -->
+<input type="hidden" name="<?= $TokenValueKey ?>" value="<?= $TokenValue ?>"><!-- CSRF token value -->
+<?php } ?>
+<input type="hidden" name="t" value="invertor_all_booking">
+<input type="hidden" name="action" id="action" value="update">
+<input type="hidden" name="modal" value="<?= (int)$Page->IsModal ?>">
+<input type="hidden" name="<?= $Page->OldKeyName ?>" value="<?= $Page->OldKey ?>">
+<div class="ew-edit-div"><!-- page* -->
+<?php if ($Page->asset_id->Visible) { // asset_id ?>
+    <div id="r_asset_id"<?= $Page->asset_id->rowAttributes() ?>>
+        <label id="elh_invertor_all_booking_asset_id" for="x_asset_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->asset_id->caption() ?><?= $Page->asset_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->asset_id->cellAttributes() ?>>
+<span id="el_invertor_all_booking_asset_id">
+<span<?= $Page->asset_id->viewAttributes() ?>>
+<span class="form-control-plaintext"><?= $Page->asset_id->getDisplayValue($Page->asset_id->EditValue) ?></span></span>
+</span>
+<input type="hidden" data-table="invertor_all_booking" data-field="x_asset_id" data-hidden="1" name="x_asset_id" id="x_asset_id" value="<?= HtmlEncode($Page->asset_id->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->member_id->Visible) { // member_id ?>
+    <div id="r_member_id"<?= $Page->member_id->rowAttributes() ?>>
+        <label id="elh_invertor_all_booking_member_id" for="x_member_id" class="<?= $Page->LeftColumnClass ?>"><?= $Page->member_id->caption() ?><?= $Page->member_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->member_id->cellAttributes() ?>>
+<span id="el_invertor_all_booking_member_id">
+<span<?= $Page->member_id->viewAttributes() ?>>
+<span class="form-control-plaintext"><?= $Page->member_id->getDisplayValue($Page->member_id->EditValue) ?></span></span>
+</span>
+<input type="hidden" data-table="invertor_all_booking" data-field="x_member_id" data-hidden="1" name="x_member_id" id="x_member_id" value="<?= HtmlEncode($Page->member_id->CurrentValue) ?>">
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->date_booking->Visible) { // date_booking ?>
+    <div id="r_date_booking"<?= $Page->date_booking->rowAttributes() ?>>
+        <label id="elh_invertor_all_booking_date_booking" for="x_date_booking" class="<?= $Page->LeftColumnClass ?>"><?= $Page->date_booking->caption() ?><?= $Page->date_booking->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->date_booking->cellAttributes() ?>>
+<span id="el_invertor_all_booking_date_booking">
+<input type="<?= $Page->date_booking->getInputTextType() ?>" name="x_date_booking" id="x_date_booking" data-table="invertor_all_booking" data-field="x_date_booking" value="<?= $Page->date_booking->EditValue ?>" placeholder="<?= HtmlEncode($Page->date_booking->getPlaceHolder()) ?>"<?= $Page->date_booking->editAttributes() ?> aria-describedby="x_date_booking_help">
+<?= $Page->date_booking->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->date_booking->getErrorMessage() ?></div>
+<?php if (!$Page->date_booking->ReadOnly && !$Page->date_booking->Disabled && !isset($Page->date_booking->EditAttrs["readonly"]) && !isset($Page->date_booking->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["finvertor_all_bookingedit", "datetimepicker"], function () {
+    let format = "<?= DateFormat(7) ?>",
+        options = {
+        localization: {
+            locale: ew.LANGUAGE_ID,
+            numberingSystem: ew.getNumberingSystem()
+        },
+        display: {
+            format,
+            components: {
+                hours: !!format.match(/h/i),
+                minutes: !!format.match(/m/),
+                seconds: !!format.match(/s/i)
+            },
+            icons: {
+                previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+            }
+        }
+    };
+    ew.createDateTimePicker("finvertor_all_bookingedit", "x_date_booking", jQuery.extend(true, {"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->status_expire->Visible) { // status_expire ?>
+    <div id="r_status_expire"<?= $Page->status_expire->rowAttributes() ?>>
+        <label id="elh_invertor_all_booking_status_expire" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status_expire->caption() ?><?= $Page->status_expire->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status_expire->cellAttributes() ?>>
+<span id="el_invertor_all_booking_status_expire">
+<template id="tp_x_status_expire">
+    <div class="form-check">
+        <input type="radio" class="form-check-input" data-table="invertor_all_booking" data-field="x_status_expire" name="x_status_expire" id="x_status_expire"<?= $Page->status_expire->editAttributes() ?>>
+        <label class="form-check-label"></label>
+    </div>
+</template>
+<div id="dsl_x_status_expire" class="ew-item-list"></div>
+<selection-list hidden
+    id="x_status_expire"
+    name="x_status_expire"
+    value="<?= HtmlEncode($Page->status_expire->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_status_expire"
+    data-bs-target="dsl_x_status_expire"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->status_expire->isInvalidClass() ?>"
+    data-table="invertor_all_booking"
+    data-field="x_status_expire"
+    data-value-separator="<?= $Page->status_expire->displayValueSeparatorAttribute() ?>"
+    <?= $Page->status_expire->editAttributes() ?>></selection-list>
+<?= $Page->status_expire->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->status_expire->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->status_expire_reason->Visible) { // status_expire_reason ?>
+    <div id="r_status_expire_reason"<?= $Page->status_expire_reason->rowAttributes() ?>>
+        <label id="elh_invertor_all_booking_status_expire_reason" for="x_status_expire_reason" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status_expire_reason->caption() ?><?= $Page->status_expire_reason->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status_expire_reason->cellAttributes() ?>>
+<span id="el_invertor_all_booking_status_expire_reason">
+<input type="<?= $Page->status_expire_reason->getInputTextType() ?>" name="x_status_expire_reason" id="x_status_expire_reason" data-table="invertor_all_booking" data-field="x_status_expire_reason" value="<?= $Page->status_expire_reason->EditValue ?>" size="30" maxlength="255" placeholder="<?= HtmlEncode($Page->status_expire_reason->getPlaceHolder()) ?>"<?= $Page->status_expire_reason->editAttributes() ?> aria-describedby="x_status_expire_reason_help">
+<?= $Page->status_expire_reason->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->status_expire_reason->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+<?php if ($Page->payment_status->Visible) { // payment_status ?>
+    <div id="r_payment_status"<?= $Page->payment_status->rowAttributes() ?>>
+        <label id="elh_invertor_all_booking_payment_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->payment_status->caption() ?><?= $Page->payment_status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->payment_status->cellAttributes() ?>>
+<span id="el_invertor_all_booking_payment_status">
+<template id="tp_x_payment_status">
+    <div class="form-check">
+        <input type="radio" class="form-check-input" data-table="invertor_all_booking" data-field="x_payment_status" name="x_payment_status" id="x_payment_status"<?= $Page->payment_status->editAttributes() ?>>
+        <label class="form-check-label"></label>
+    </div>
+</template>
+<div id="dsl_x_payment_status" class="ew-item-list"></div>
+<selection-list hidden
+    id="x_payment_status"
+    name="x_payment_status"
+    value="<?= HtmlEncode($Page->payment_status->CurrentValue) ?>"
+    data-type="select-one"
+    data-template="tp_x_payment_status"
+    data-bs-target="dsl_x_payment_status"
+    data-repeatcolumn="5"
+    class="form-control<?= $Page->payment_status->isInvalidClass() ?>"
+    data-table="invertor_all_booking"
+    data-field="x_payment_status"
+    data-value-separator="<?= $Page->payment_status->displayValueSeparatorAttribute() ?>"
+    <?= $Page->payment_status->editAttributes() ?>></selection-list>
+<?= $Page->payment_status->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->payment_status->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div><!-- /page* -->
+    <input type="hidden" data-table="invertor_all_booking" data-field="x_invertor_booking_id" data-hidden="1" name="x_invertor_booking_id" id="x_invertor_booking_id" value="<?= HtmlEncode($Page->invertor_booking_id->CurrentValue) ?>">
+<?php
+    if (in_array("payment_inverter_booking", explode(",", $Page->getCurrentDetailTable())) && $payment_inverter_booking->DetailEdit) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("payment_inverter_booking", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "PaymentInverterBookingGrid.php" ?>
+<?php } ?>
+<?php
+    if (in_array("all_asset_config_schedule", explode(",", $Page->getCurrentDetailTable())) && $all_asset_config_schedule->DetailEdit) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("all_asset_config_schedule", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "AllAssetConfigScheduleGrid.php" ?>
+<?php } ?>
+<?php
+    if (in_array("all_asset_schedule", explode(",", $Page->getCurrentDetailTable())) && $all_asset_schedule->DetailEdit) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("all_asset_schedule", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "AllAssetScheduleGrid.php" ?>
+<?php } ?>
+<?php
+    if (in_array("doc_juzmatch2", explode(",", $Page->getCurrentDetailTable())) && $doc_juzmatch2->DetailEdit) {
+?>
+<?php if ($Page->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?= $Language->tablePhrase("doc_juzmatch2", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "DocJuzmatch2Grid.php" ?>
+<?php } ?>
+<?php if (!$Page->IsModal) { ?>
+<div class="row"><!-- buttons .row -->
+    <div class="<?= $Page->OffsetColumnClass ?>"><!-- buttons offset -->
+<button class="btn btn-primary ew-btn" name="btn-action" id="btn-action" type="submit"><?= $Language->phrase("SaveBtn") ?></button>
+<button class="btn btn-default ew-btn" name="btn-cancel" id="btn-cancel" type="button" data-href="<?= HtmlEncode(GetUrl($Page->getReturnUrl())) ?>"><?= $Language->phrase("CancelBtn") ?></button>
+    </div><!-- /buttons offset -->
+</div><!-- /buttons .row -->
+<?php } ?>
+</form>
+<?php
+$Page->showPageFooter();
+echo GetDebugMessage();
+?>
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("invertor_all_booking");
+});
+</script>
+<script>
+loadjs.ready("load", function () {
+    // Write your table-specific startup script here, no need to add script tags.
+});
+</script>

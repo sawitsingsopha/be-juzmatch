@@ -1,0 +1,747 @@
+<?php
+
+namespace PHPMaker2022\juzmatch;
+
+// Set up and run Grid object
+$Grid = Container("AppointmentGrid");
+$Grid->run();
+?>
+<?php if (!$Grid->isExport()) { ?>
+<script>
+var fappointmentgrid;
+loadjs.ready(["wrapper", "head"], function () {
+    var $ = jQuery;
+    // Form object
+    fappointmentgrid = new ew.Form("fappointmentgrid", "grid");
+    fappointmentgrid.formKeyCountName = "<?= $Grid->FormKeyCountName ?>";
+
+    // Add fields
+    var currentTable = <?= JsonEncode($Grid->toClientVar()) ?>;
+    ew.deepAssign(ew.vars, { tables: { appointment: currentTable } });
+    var fields = currentTable.fields;
+    fappointmentgrid.addFields([
+        ["asset_id", [fields.asset_id.visible && fields.asset_id.required ? ew.Validators.required(fields.asset_id.caption) : null], fields.asset_id.isInvalid],
+        ["date", [fields.date.visible && fields.date.required ? ew.Validators.required(fields.date.caption) : null, ew.Validators.datetime(fields.date.clientFormatPattern)], fields.date.isInvalid],
+        ["time", [fields.time.visible && fields.time.required ? ew.Validators.required(fields.time.caption) : null], fields.time.isInvalid],
+        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
+        ["cdate", [fields.cdate.visible && fields.cdate.required ? ew.Validators.required(fields.cdate.caption) : null], fields.cdate.isInvalid]
+    ]);
+
+    // Check empty row
+    fappointmentgrid.emptyRow = function (rowIndex) {
+        var fobj = this.getForm(),
+            fields = [["asset_id",false],["date",false],["time",false],["status",false]];
+        if (fields.some(field => ew.valueChanged(fobj, rowIndex, ...field)))
+            return false;
+        return true;
+    }
+
+    // Form_CustomValidate
+    fappointmentgrid.customValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
+        // Your custom validation code here, return false if invalid.
+        return true;
+    }
+
+    // Use JavaScript validation or not
+    fappointmentgrid.validateRequired = ew.CLIENT_VALIDATE;
+
+    // Dynamic selection lists
+    fappointmentgrid.lists.asset_id = <?= $Grid->asset_id->toClientList($Grid) ?>;
+    fappointmentgrid.lists.status = <?= $Grid->status->toClientList($Grid) ?>;
+    loadjs.done("fappointmentgrid");
+});
+</script>
+<?php } ?>
+<?php
+$Grid->renderOtherOptions();
+?>
+<?php if ($Grid->TotalRecords > 0 || $Grid->CurrentAction) { ?>
+<div class="card ew-card ew-grid<?php if ($Grid->isAddOrEdit()) { ?> ew-grid-add-edit<?php } ?> appointment">
+<div id="fappointmentgrid" class="ew-form ew-list-form">
+<div id="gmp_appointment" class="<?= ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
+<table id="tbl_appointmentgrid" class="table table-bordered table-hover table-sm ew-table"><!-- .ew-table -->
+<thead>
+    <tr class="ew-table-header">
+<?php
+// Header row
+$Grid->RowType = ROWTYPE_HEADER;
+
+// Render list options
+$Grid->renderListOptions();
+
+// Render list options (header, left)
+$Grid->ListOptions->render("header", "left");
+?>
+<?php if ($Grid->asset_id->Visible) { // asset_id ?>
+        <th data-name="asset_id" class="<?= $Grid->asset_id->headerCellClass() ?>"><div id="elh_appointment_asset_id" class="appointment_asset_id"><?= $Grid->renderFieldHeader($Grid->asset_id) ?></div></th>
+<?php } ?>
+<?php if ($Grid->date->Visible) { // date ?>
+        <th data-name="date" class="<?= $Grid->date->headerCellClass() ?>"><div id="elh_appointment_date" class="appointment_date"><?= $Grid->renderFieldHeader($Grid->date) ?></div></th>
+<?php } ?>
+<?php if ($Grid->time->Visible) { // time ?>
+        <th data-name="time" class="<?= $Grid->time->headerCellClass() ?>"><div id="elh_appointment_time" class="appointment_time"><?= $Grid->renderFieldHeader($Grid->time) ?></div></th>
+<?php } ?>
+<?php if ($Grid->status->Visible) { // status ?>
+        <th data-name="status" class="<?= $Grid->status->headerCellClass() ?>"><div id="elh_appointment_status" class="appointment_status"><?= $Grid->renderFieldHeader($Grid->status) ?></div></th>
+<?php } ?>
+<?php if ($Grid->cdate->Visible) { // cdate ?>
+        <th data-name="cdate" class="<?= $Grid->cdate->headerCellClass() ?>"><div id="elh_appointment_cdate" class="appointment_cdate"><?= $Grid->renderFieldHeader($Grid->cdate) ?></div></th>
+<?php } ?>
+<?php
+// Render list options (header, right)
+$Grid->ListOptions->render("header", "right");
+?>
+    </tr>
+</thead>
+<tbody>
+<?php
+$Grid->StartRecord = 1;
+$Grid->StopRecord = $Grid->TotalRecords; // Show all records
+
+// Restore number of post back records
+if ($CurrentForm && ($Grid->isConfirm() || $Grid->EventCancelled)) {
+    $CurrentForm->Index = -1;
+    if ($CurrentForm->hasValue($Grid->FormKeyCountName) && ($Grid->isGridAdd() || $Grid->isGridEdit() || $Grid->isConfirm())) {
+        $Grid->KeyCount = $CurrentForm->getValue($Grid->FormKeyCountName);
+        $Grid->StopRecord = $Grid->StartRecord + $Grid->KeyCount - 1;
+    }
+}
+$Grid->RecordCount = $Grid->StartRecord - 1;
+if ($Grid->Recordset && !$Grid->Recordset->EOF) {
+    // Nothing to do
+} elseif ($Grid->isGridAdd() && !$Grid->AllowAddDeleteRow && $Grid->StopRecord == 0) {
+    $Grid->StopRecord = $Grid->GridAddRowCount;
+}
+
+// Initialize aggregate
+$Grid->RowType = ROWTYPE_AGGREGATEINIT;
+$Grid->resetAttributes();
+$Grid->renderRow();
+while ($Grid->RecordCount < $Grid->StopRecord) {
+    $Grid->RecordCount++;
+    if ($Grid->RecordCount >= $Grid->StartRecord) {
+        $Grid->RowCount++;
+        if ($Grid->isAdd() || $Grid->isGridAdd() || $Grid->isGridEdit() || $Grid->isConfirm()) {
+            $Grid->RowIndex++;
+            $CurrentForm->Index = $Grid->RowIndex;
+            if ($CurrentForm->hasValue($Grid->FormActionName) && ($Grid->isConfirm() || $Grid->EventCancelled)) {
+                $Grid->RowAction = strval($CurrentForm->getValue($Grid->FormActionName));
+            } elseif ($Grid->isGridAdd()) {
+                $Grid->RowAction = "insert";
+            } else {
+                $Grid->RowAction = "";
+            }
+        }
+
+        // Set up key count
+        $Grid->KeyCount = $Grid->RowIndex;
+
+        // Init row class and style
+        $Grid->resetAttributes();
+        $Grid->CssClass = "";
+        if ($Grid->isGridAdd()) {
+            if ($Grid->CurrentMode == "copy") {
+                $Grid->loadRowValues($Grid->Recordset); // Load row values
+                $Grid->OldKey = $Grid->getKey(true); // Get from CurrentValue
+            } else {
+                $Grid->loadRowValues(); // Load default values
+                $Grid->OldKey = "";
+            }
+        } else {
+            $Grid->loadRowValues($Grid->Recordset); // Load row values
+            $Grid->OldKey = $Grid->getKey(true); // Get from CurrentValue
+        }
+        $Grid->setKey($Grid->OldKey);
+        $Grid->RowType = ROWTYPE_VIEW; // Render view
+        if ($Grid->isGridAdd()) { // Grid add
+            $Grid->RowType = ROWTYPE_ADD; // Render add
+        }
+        if ($Grid->isGridAdd() && $Grid->EventCancelled && !$CurrentForm->hasValue("k_blankrow")) { // Insert failed
+            $Grid->restoreCurrentRowFormValues($Grid->RowIndex); // Restore form values
+        }
+        if ($Grid->isGridEdit()) { // Grid edit
+            if ($Grid->EventCancelled) {
+                $Grid->restoreCurrentRowFormValues($Grid->RowIndex); // Restore form values
+            }
+            if ($Grid->RowAction == "insert") {
+                $Grid->RowType = ROWTYPE_ADD; // Render add
+            } else {
+                $Grid->RowType = ROWTYPE_EDIT; // Render edit
+            }
+        }
+        if ($Grid->isGridEdit() && ($Grid->RowType == ROWTYPE_EDIT || $Grid->RowType == ROWTYPE_ADD) && $Grid->EventCancelled) { // Update failed
+            $Grid->restoreCurrentRowFormValues($Grid->RowIndex); // Restore form values
+        }
+        if ($Grid->RowType == ROWTYPE_EDIT) { // Edit row
+            $Grid->EditRowCount++;
+        }
+        if ($Grid->isConfirm()) { // Confirm row
+            $Grid->restoreCurrentRowFormValues($Grid->RowIndex); // Restore form values
+        }
+
+        // Set up row attributes
+        $Grid->RowAttrs->merge([
+            "data-rowindex" => $Grid->RowCount,
+            "id" => "r" . $Grid->RowCount . "_appointment",
+            "data-rowtype" => $Grid->RowType,
+            "class" => ($Grid->RowCount % 2 != 1) ? "ew-table-alt-row" : "",
+        ]);
+        if ($Grid->isAdd() && $Grid->RowType == ROWTYPE_ADD || $Grid->isEdit() && $Grid->RowType == ROWTYPE_EDIT) { // Inline-Add/Edit row
+            $Grid->RowAttrs->appendClass("table-active");
+        }
+
+        // Render row
+        $Grid->renderRow();
+
+        // Render list options
+        $Grid->renderListOptions();
+
+        // Skip delete row / empty row for confirm page
+        if (
+            $Page->RowAction != "delete" &&
+            $Page->RowAction != "insertdelete" &&
+            !($Page->RowAction == "insert" && $Page->isConfirm() && $Page->emptyRow())
+        ) {
+?>
+    <tr <?= $Grid->rowAttributes() ?>>
+<?php
+// Render list options (body, left)
+$Grid->ListOptions->render("body", "left", $Grid->RowCount);
+?>
+    <?php if ($Grid->asset_id->Visible) { // asset_id ?>
+        <td data-name="asset_id"<?= $Grid->asset_id->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<?php if ($Grid->asset_id->getSessionValue() != "") { ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_asset_id" class="el_appointment_asset_id">
+<span<?= $Grid->asset_id->viewAttributes() ?>>
+<span class="form-control-plaintext"><?= $Grid->asset_id->getDisplayValue($Grid->asset_id->ViewValue) ?></span></span>
+</span>
+<input type="hidden" id="x<?= $Grid->RowIndex ?>_asset_id" name="x<?= $Grid->RowIndex ?>_asset_id" value="<?= HtmlEncode(FormatNumber($Grid->asset_id->CurrentValue, $Grid->asset_id->formatPattern())) ?>" data-hidden="1">
+<?php } else { ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_asset_id" class="el_appointment_asset_id">
+    <select
+        id="x<?= $Grid->RowIndex ?>_asset_id"
+        name="x<?= $Grid->RowIndex ?>_asset_id"
+        class="form-select ew-select<?= $Grid->asset_id->isInvalidClass() ?>"
+        data-select2-id="fappointmentgrid_x<?= $Grid->RowIndex ?>_asset_id"
+        data-table="appointment"
+        data-field="x_asset_id"
+        data-value-separator="<?= $Grid->asset_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->asset_id->getPlaceHolder()) ?>"
+        <?= $Grid->asset_id->editAttributes() ?>>
+        <?= $Grid->asset_id->selectOptionListHtml("x{$Grid->RowIndex}_asset_id") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->asset_id->getErrorMessage() ?></div>
+<?= $Grid->asset_id->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_asset_id") ?>
+<script>
+loadjs.ready("fappointmentgrid", function() {
+    var options = { name: "x<?= $Grid->RowIndex ?>_asset_id", selectId: "fappointmentgrid_x<?= $Grid->RowIndex ?>_asset_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fappointmentgrid.lists.asset_id.lookupOptions.length) {
+        options.data = { id: "x<?= $Grid->RowIndex ?>_asset_id", form: "fappointmentgrid" };
+    } else {
+        options.ajax = { id: "x<?= $Grid->RowIndex ?>_asset_id", form: "fappointmentgrid", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.appointment.fields.asset_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<input type="hidden" data-table="appointment" data-field="x_asset_id" data-hidden="1" name="o<?= $Grid->RowIndex ?>_asset_id" id="o<?= $Grid->RowIndex ?>_asset_id" value="<?= HtmlEncode($Grid->asset_id->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_asset_id" class="el_appointment_asset_id">
+<span<?= $Grid->asset_id->viewAttributes() ?>>
+<span class="form-control-plaintext"><?= $Grid->asset_id->getDisplayValue($Grid->asset_id->EditValue) ?></span></span>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_asset_id" data-hidden="1" name="x<?= $Grid->RowIndex ?>_asset_id" id="x<?= $Grid->RowIndex ?>_asset_id" value="<?= HtmlEncode($Grid->asset_id->CurrentValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_asset_id" class="el_appointment_asset_id">
+<span<?= $Grid->asset_id->viewAttributes() ?>>
+<?= $Grid->asset_id->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="appointment" data-field="x_asset_id" data-hidden="1" name="fappointmentgrid$x<?= $Grid->RowIndex ?>_asset_id" id="fappointmentgrid$x<?= $Grid->RowIndex ?>_asset_id" value="<?= HtmlEncode($Grid->asset_id->FormValue) ?>">
+<input type="hidden" data-table="appointment" data-field="x_asset_id" data-hidden="1" name="fappointmentgrid$o<?= $Grid->RowIndex ?>_asset_id" id="fappointmentgrid$o<?= $Grid->RowIndex ?>_asset_id" value="<?= HtmlEncode($Grid->asset_id->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->date->Visible) { // date ?>
+        <td data-name="date"<?= $Grid->date->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_date" class="el_appointment_date">
+<input type="<?= $Grid->date->getInputTextType() ?>" name="x<?= $Grid->RowIndex ?>_date" id="x<?= $Grid->RowIndex ?>_date" data-table="appointment" data-field="x_date" value="<?= $Grid->date->EditValue ?>" placeholder="<?= HtmlEncode($Grid->date->getPlaceHolder()) ?>"<?= $Grid->date->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->date->getErrorMessage() ?></div>
+<?php if (!$Grid->date->ReadOnly && !$Grid->date->Disabled && !isset($Grid->date->EditAttrs["readonly"]) && !isset($Grid->date->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fappointmentgrid", "datetimepicker"], function () {
+    let format = "<?= DateFormat(7) ?>",
+        options = {
+        localization: {
+            locale: ew.LANGUAGE_ID,
+            numberingSystem: ew.getNumberingSystem()
+        },
+        display: {
+            format,
+            components: {
+                hours: !!format.match(/h/i),
+                minutes: !!format.match(/m/),
+                seconds: !!format.match(/s/i)
+            },
+            icons: {
+                previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+            }
+        }
+    };
+    ew.createDateTimePicker("fappointmentgrid", "x<?= $Grid->RowIndex ?>_date", jQuery.extend(true, {"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_date" data-hidden="1" name="o<?= $Grid->RowIndex ?>_date" id="o<?= $Grid->RowIndex ?>_date" value="<?= HtmlEncode($Grid->date->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_date" class="el_appointment_date">
+<input type="<?= $Grid->date->getInputTextType() ?>" name="x<?= $Grid->RowIndex ?>_date" id="x<?= $Grid->RowIndex ?>_date" data-table="appointment" data-field="x_date" value="<?= $Grid->date->EditValue ?>" placeholder="<?= HtmlEncode($Grid->date->getPlaceHolder()) ?>"<?= $Grid->date->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->date->getErrorMessage() ?></div>
+<?php if (!$Grid->date->ReadOnly && !$Grid->date->Disabled && !isset($Grid->date->EditAttrs["readonly"]) && !isset($Grid->date->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fappointmentgrid", "datetimepicker"], function () {
+    let format = "<?= DateFormat(7) ?>",
+        options = {
+        localization: {
+            locale: ew.LANGUAGE_ID,
+            numberingSystem: ew.getNumberingSystem()
+        },
+        display: {
+            format,
+            components: {
+                hours: !!format.match(/h/i),
+                minutes: !!format.match(/m/),
+                seconds: !!format.match(/s/i)
+            },
+            icons: {
+                previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+            }
+        }
+    };
+    ew.createDateTimePicker("fappointmentgrid", "x<?= $Grid->RowIndex ?>_date", jQuery.extend(true, {"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_date" class="el_appointment_date">
+<span<?= $Grid->date->viewAttributes() ?>>
+<?= $Grid->date->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="appointment" data-field="x_date" data-hidden="1" name="fappointmentgrid$x<?= $Grid->RowIndex ?>_date" id="fappointmentgrid$x<?= $Grid->RowIndex ?>_date" value="<?= HtmlEncode($Grid->date->FormValue) ?>">
+<input type="hidden" data-table="appointment" data-field="x_date" data-hidden="1" name="fappointmentgrid$o<?= $Grid->RowIndex ?>_date" id="fappointmentgrid$o<?= $Grid->RowIndex ?>_date" value="<?= HtmlEncode($Grid->date->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->time->Visible) { // time ?>
+        <td data-name="time"<?= $Grid->time->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_time" class="el_appointment_time">
+<input type="<?= $Grid->time->getInputTextType() ?>" name="x<?= $Grid->RowIndex ?>_time" id="x<?= $Grid->RowIndex ?>_time" data-table="appointment" data-field="x_time" value="<?= $Grid->time->EditValue ?>" maxlength="255" placeholder="<?= HtmlEncode($Grid->time->getPlaceHolder()) ?>"<?= $Grid->time->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->time->getErrorMessage() ?></div>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_time" data-hidden="1" name="o<?= $Grid->RowIndex ?>_time" id="o<?= $Grid->RowIndex ?>_time" value="<?= HtmlEncode($Grid->time->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_time" class="el_appointment_time">
+<input type="<?= $Grid->time->getInputTextType() ?>" name="x<?= $Grid->RowIndex ?>_time" id="x<?= $Grid->RowIndex ?>_time" data-table="appointment" data-field="x_time" value="<?= $Grid->time->EditValue ?>" maxlength="255" placeholder="<?= HtmlEncode($Grid->time->getPlaceHolder()) ?>"<?= $Grid->time->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->time->getErrorMessage() ?></div>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_time" class="el_appointment_time">
+<span<?= $Grid->time->viewAttributes() ?>>
+<?= $Grid->time->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="appointment" data-field="x_time" data-hidden="1" name="fappointmentgrid$x<?= $Grid->RowIndex ?>_time" id="fappointmentgrid$x<?= $Grid->RowIndex ?>_time" value="<?= HtmlEncode($Grid->time->FormValue) ?>">
+<input type="hidden" data-table="appointment" data-field="x_time" data-hidden="1" name="fappointmentgrid$o<?= $Grid->RowIndex ?>_time" id="fappointmentgrid$o<?= $Grid->RowIndex ?>_time" value="<?= HtmlEncode($Grid->time->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->status->Visible) { // status ?>
+        <td data-name="status"<?= $Grid->status->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_status" class="el_appointment_status">
+    <select
+        id="x<?= $Grid->RowIndex ?>_status"
+        name="x<?= $Grid->RowIndex ?>_status"
+        class="form-select ew-select<?= $Grid->status->isInvalidClass() ?>"
+        data-select2-id="fappointmentgrid_x<?= $Grid->RowIndex ?>_status"
+        data-table="appointment"
+        data-field="x_status"
+        data-value-separator="<?= $Grid->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->status->getPlaceHolder()) ?>"
+        <?= $Grid->status->editAttributes() ?>>
+        <?= $Grid->status->selectOptionListHtml("x{$Grid->RowIndex}_status") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+<script>
+loadjs.ready("fappointmentgrid", function() {
+    var options = { name: "x<?= $Grid->RowIndex ?>_status", selectId: "fappointmentgrid_x<?= $Grid->RowIndex ?>_status" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fappointmentgrid.lists.status.lookupOptions.length) {
+        options.data = { id: "x<?= $Grid->RowIndex ?>_status", form: "fappointmentgrid" };
+    } else {
+        options.ajax = { id: "x<?= $Grid->RowIndex ?>_status", form: "fappointmentgrid", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.appointment.fields.status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_status" data-hidden="1" name="o<?= $Grid->RowIndex ?>_status" id="o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_status" class="el_appointment_status">
+    <select
+        id="x<?= $Grid->RowIndex ?>_status"
+        name="x<?= $Grid->RowIndex ?>_status"
+        class="form-select ew-select<?= $Grid->status->isInvalidClass() ?>"
+        data-select2-id="fappointmentgrid_x<?= $Grid->RowIndex ?>_status"
+        data-table="appointment"
+        data-field="x_status"
+        data-value-separator="<?= $Grid->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->status->getPlaceHolder()) ?>"
+        <?= $Grid->status->editAttributes() ?>>
+        <?= $Grid->status->selectOptionListHtml("x{$Grid->RowIndex}_status") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+<script>
+loadjs.ready("fappointmentgrid", function() {
+    var options = { name: "x<?= $Grid->RowIndex ?>_status", selectId: "fappointmentgrid_x<?= $Grid->RowIndex ?>_status" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fappointmentgrid.lists.status.lookupOptions.length) {
+        options.data = { id: "x<?= $Grid->RowIndex ?>_status", form: "fappointmentgrid" };
+    } else {
+        options.ajax = { id: "x<?= $Grid->RowIndex ?>_status", form: "fappointmentgrid", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.appointment.fields.status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_status" class="el_appointment_status">
+<span<?= $Grid->status->viewAttributes() ?>>
+<?= $Grid->status->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="appointment" data-field="x_status" data-hidden="1" name="fappointmentgrid$x<?= $Grid->RowIndex ?>_status" id="fappointmentgrid$x<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->FormValue) ?>">
+<input type="hidden" data-table="appointment" data-field="x_status" data-hidden="1" name="fappointmentgrid$o<?= $Grid->RowIndex ?>_status" id="fappointmentgrid$o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+    <?php if ($Grid->cdate->Visible) { // cdate ?>
+        <td data-name="cdate"<?= $Grid->cdate->cellAttributes() ?>>
+<?php if ($Grid->RowType == ROWTYPE_ADD) { // Add record ?>
+<input type="hidden" data-table="appointment" data-field="x_cdate" data-hidden="1" name="o<?= $Grid->RowIndex ?>_cdate" id="o<?= $Grid->RowIndex ?>_cdate" value="<?= HtmlEncode($Grid->cdate->OldValue) ?>">
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<?php } ?>
+<?php if ($Grid->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?= $Grid->RowCount ?>_appointment_cdate" class="el_appointment_cdate">
+<span<?= $Grid->cdate->viewAttributes() ?>>
+<?= $Grid->cdate->getViewValue() ?></span>
+</span>
+<?php if ($Grid->isConfirm()) { ?>
+<input type="hidden" data-table="appointment" data-field="x_cdate" data-hidden="1" name="fappointmentgrid$x<?= $Grid->RowIndex ?>_cdate" id="fappointmentgrid$x<?= $Grid->RowIndex ?>_cdate" value="<?= HtmlEncode($Grid->cdate->FormValue) ?>">
+<input type="hidden" data-table="appointment" data-field="x_cdate" data-hidden="1" name="fappointmentgrid$o<?= $Grid->RowIndex ?>_cdate" id="fappointmentgrid$o<?= $Grid->RowIndex ?>_cdate" value="<?= HtmlEncode($Grid->cdate->OldValue) ?>">
+<?php } ?>
+<?php } ?>
+</td>
+    <?php } ?>
+<?php
+// Render list options (body, right)
+$Grid->ListOptions->render("body", "right", $Grid->RowCount);
+?>
+    </tr>
+<?php if ($Grid->RowType == ROWTYPE_ADD || $Grid->RowType == ROWTYPE_EDIT) { ?>
+<script>
+loadjs.ready(["fappointmentgrid","load"], () => fappointmentgrid.updateLists(<?= $Grid->RowIndex ?>));
+</script>
+<?php } ?>
+<?php
+    }
+    } // End delete row checking
+    if (!$Grid->isGridAdd() || $Grid->CurrentMode == "copy")
+        if (!$Grid->Recordset->EOF) {
+            $Grid->Recordset->moveNext();
+        }
+}
+?>
+<?php
+if ($Grid->CurrentMode == "add" || $Grid->CurrentMode == "copy" || $Grid->CurrentMode == "edit") {
+    $Grid->RowIndex = '$rowindex$';
+    $Grid->loadRowValues();
+
+    // Set row properties
+    $Grid->resetAttributes();
+    $Grid->RowAttrs->merge(["data-rowindex" => $Grid->RowIndex, "id" => "r0_appointment", "data-rowtype" => ROWTYPE_ADD]);
+    $Grid->RowAttrs->appendClass("ew-template");
+
+    // Reset previous form error if any
+    $Grid->resetFormError();
+
+    // Render row
+    $Grid->RowType = ROWTYPE_ADD;
+    $Grid->renderRow();
+
+    // Render list options
+    $Grid->renderListOptions();
+    $Grid->StartRowCount = 0;
+?>
+    <tr <?= $Grid->rowAttributes() ?>>
+<?php
+// Render list options (body, left)
+$Grid->ListOptions->render("body", "left", $Grid->RowIndex);
+?>
+    <?php if ($Grid->asset_id->Visible) { // asset_id ?>
+        <td data-name="asset_id">
+<?php if (!$Grid->isConfirm()) { ?>
+<?php if ($Grid->asset_id->getSessionValue() != "") { ?>
+<span id="el$rowindex$_appointment_asset_id" class="el_appointment_asset_id">
+<span<?= $Grid->asset_id->viewAttributes() ?>>
+<span class="form-control-plaintext"><?= $Grid->asset_id->getDisplayValue($Grid->asset_id->ViewValue) ?></span></span>
+</span>
+<input type="hidden" id="x<?= $Grid->RowIndex ?>_asset_id" name="x<?= $Grid->RowIndex ?>_asset_id" value="<?= HtmlEncode(FormatNumber($Grid->asset_id->CurrentValue, $Grid->asset_id->formatPattern())) ?>" data-hidden="1">
+<?php } else { ?>
+<span id="el$rowindex$_appointment_asset_id" class="el_appointment_asset_id">
+    <select
+        id="x<?= $Grid->RowIndex ?>_asset_id"
+        name="x<?= $Grid->RowIndex ?>_asset_id"
+        class="form-select ew-select<?= $Grid->asset_id->isInvalidClass() ?>"
+        data-select2-id="fappointmentgrid_x<?= $Grid->RowIndex ?>_asset_id"
+        data-table="appointment"
+        data-field="x_asset_id"
+        data-value-separator="<?= $Grid->asset_id->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->asset_id->getPlaceHolder()) ?>"
+        <?= $Grid->asset_id->editAttributes() ?>>
+        <?= $Grid->asset_id->selectOptionListHtml("x{$Grid->RowIndex}_asset_id") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->asset_id->getErrorMessage() ?></div>
+<?= $Grid->asset_id->Lookup->getParamTag($Grid, "p_x" . $Grid->RowIndex . "_asset_id") ?>
+<script>
+loadjs.ready("fappointmentgrid", function() {
+    var options = { name: "x<?= $Grid->RowIndex ?>_asset_id", selectId: "fappointmentgrid_x<?= $Grid->RowIndex ?>_asset_id" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fappointmentgrid.lists.asset_id.lookupOptions.length) {
+        options.data = { id: "x<?= $Grid->RowIndex ?>_asset_id", form: "fappointmentgrid" };
+    } else {
+        options.ajax = { id: "x<?= $Grid->RowIndex ?>_asset_id", form: "fappointmentgrid", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.appointment.fields.asset_id.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } ?>
+<?php } else { ?>
+<span id="el$rowindex$_appointment_asset_id" class="el_appointment_asset_id">
+<span<?= $Grid->asset_id->viewAttributes() ?>>
+<span class="form-control-plaintext"><?= $Grid->asset_id->getDisplayValue($Grid->asset_id->ViewValue) ?></span></span>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_asset_id" data-hidden="1" name="x<?= $Grid->RowIndex ?>_asset_id" id="x<?= $Grid->RowIndex ?>_asset_id" value="<?= HtmlEncode($Grid->asset_id->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="appointment" data-field="x_asset_id" data-hidden="1" name="o<?= $Grid->RowIndex ?>_asset_id" id="o<?= $Grid->RowIndex ?>_asset_id" value="<?= HtmlEncode($Grid->asset_id->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->date->Visible) { // date ?>
+        <td data-name="date">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_appointment_date" class="el_appointment_date">
+<input type="<?= $Grid->date->getInputTextType() ?>" name="x<?= $Grid->RowIndex ?>_date" id="x<?= $Grid->RowIndex ?>_date" data-table="appointment" data-field="x_date" value="<?= $Grid->date->EditValue ?>" placeholder="<?= HtmlEncode($Grid->date->getPlaceHolder()) ?>"<?= $Grid->date->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->date->getErrorMessage() ?></div>
+<?php if (!$Grid->date->ReadOnly && !$Grid->date->Disabled && !isset($Grid->date->EditAttrs["readonly"]) && !isset($Grid->date->EditAttrs["disabled"])) { ?>
+<script>
+loadjs.ready(["fappointmentgrid", "datetimepicker"], function () {
+    let format = "<?= DateFormat(7) ?>",
+        options = {
+        localization: {
+            locale: ew.LANGUAGE_ID,
+            numberingSystem: ew.getNumberingSystem()
+        },
+        display: {
+            format,
+            components: {
+                hours: !!format.match(/h/i),
+                minutes: !!format.match(/m/),
+                seconds: !!format.match(/s/i)
+            },
+            icons: {
+                previous: ew.IS_RTL ? "fas fa-chevron-right" : "fas fa-chevron-left",
+                next: ew.IS_RTL ? "fas fa-chevron-left" : "fas fa-chevron-right"
+            }
+        }
+    };
+    ew.createDateTimePicker("fappointmentgrid", "x<?= $Grid->RowIndex ?>_date", jQuery.extend(true, {"useCurrent":false}, options));
+});
+</script>
+<?php } ?>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_appointment_date" class="el_appointment_date">
+<span<?= $Grid->date->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->date->getDisplayValue($Grid->date->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_date" data-hidden="1" name="x<?= $Grid->RowIndex ?>_date" id="x<?= $Grid->RowIndex ?>_date" value="<?= HtmlEncode($Grid->date->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="appointment" data-field="x_date" data-hidden="1" name="o<?= $Grid->RowIndex ?>_date" id="o<?= $Grid->RowIndex ?>_date" value="<?= HtmlEncode($Grid->date->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->time->Visible) { // time ?>
+        <td data-name="time">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_appointment_time" class="el_appointment_time">
+<input type="<?= $Grid->time->getInputTextType() ?>" name="x<?= $Grid->RowIndex ?>_time" id="x<?= $Grid->RowIndex ?>_time" data-table="appointment" data-field="x_time" value="<?= $Grid->time->EditValue ?>" maxlength="255" placeholder="<?= HtmlEncode($Grid->time->getPlaceHolder()) ?>"<?= $Grid->time->editAttributes() ?>>
+<div class="invalid-feedback"><?= $Grid->time->getErrorMessage() ?></div>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_appointment_time" class="el_appointment_time">
+<span<?= $Grid->time->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->time->getDisplayValue($Grid->time->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_time" data-hidden="1" name="x<?= $Grid->RowIndex ?>_time" id="x<?= $Grid->RowIndex ?>_time" value="<?= HtmlEncode($Grid->time->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="appointment" data-field="x_time" data-hidden="1" name="o<?= $Grid->RowIndex ?>_time" id="o<?= $Grid->RowIndex ?>_time" value="<?= HtmlEncode($Grid->time->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->status->Visible) { // status ?>
+        <td data-name="status">
+<?php if (!$Grid->isConfirm()) { ?>
+<span id="el$rowindex$_appointment_status" class="el_appointment_status">
+    <select
+        id="x<?= $Grid->RowIndex ?>_status"
+        name="x<?= $Grid->RowIndex ?>_status"
+        class="form-select ew-select<?= $Grid->status->isInvalidClass() ?>"
+        data-select2-id="fappointmentgrid_x<?= $Grid->RowIndex ?>_status"
+        data-table="appointment"
+        data-field="x_status"
+        data-value-separator="<?= $Grid->status->displayValueSeparatorAttribute() ?>"
+        data-placeholder="<?= HtmlEncode($Grid->status->getPlaceHolder()) ?>"
+        <?= $Grid->status->editAttributes() ?>>
+        <?= $Grid->status->selectOptionListHtml("x{$Grid->RowIndex}_status") ?>
+    </select>
+    <div class="invalid-feedback"><?= $Grid->status->getErrorMessage() ?></div>
+<script>
+loadjs.ready("fappointmentgrid", function() {
+    var options = { name: "x<?= $Grid->RowIndex ?>_status", selectId: "fappointmentgrid_x<?= $Grid->RowIndex ?>_status" },
+        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
+    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
+    if (fappointmentgrid.lists.status.lookupOptions.length) {
+        options.data = { id: "x<?= $Grid->RowIndex ?>_status", form: "fappointmentgrid" };
+    } else {
+        options.ajax = { id: "x<?= $Grid->RowIndex ?>_status", form: "fappointmentgrid", limit: ew.LOOKUP_PAGE_SIZE };
+    }
+    options.minimumResultsForSearch = Infinity;
+    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.appointment.fields.status.selectOptions);
+    ew.createSelect(options);
+});
+</script>
+</span>
+<?php } else { ?>
+<span id="el$rowindex$_appointment_status" class="el_appointment_status">
+<span<?= $Grid->status->viewAttributes() ?>>
+<span class="form-control-plaintext"><?= $Grid->status->getDisplayValue($Grid->status->ViewValue) ?></span></span>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_status" data-hidden="1" name="x<?= $Grid->RowIndex ?>_status" id="x<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="appointment" data-field="x_status" data-hidden="1" name="o<?= $Grid->RowIndex ?>_status" id="o<?= $Grid->RowIndex ?>_status" value="<?= HtmlEncode($Grid->status->OldValue) ?>">
+</td>
+    <?php } ?>
+    <?php if ($Grid->cdate->Visible) { // cdate ?>
+        <td data-name="cdate">
+<?php if (!$Grid->isConfirm()) { ?>
+<?php } else { ?>
+<span id="el$rowindex$_appointment_cdate" class="el_appointment_cdate">
+<span<?= $Grid->cdate->viewAttributes() ?>>
+<input type="text" readonly class="form-control-plaintext" value="<?= HtmlEncode(RemoveHtml($Grid->cdate->getDisplayValue($Grid->cdate->ViewValue))) ?>"></span>
+</span>
+<input type="hidden" data-table="appointment" data-field="x_cdate" data-hidden="1" name="x<?= $Grid->RowIndex ?>_cdate" id="x<?= $Grid->RowIndex ?>_cdate" value="<?= HtmlEncode($Grid->cdate->FormValue) ?>">
+<?php } ?>
+<input type="hidden" data-table="appointment" data-field="x_cdate" data-hidden="1" name="o<?= $Grid->RowIndex ?>_cdate" id="o<?= $Grid->RowIndex ?>_cdate" value="<?= HtmlEncode($Grid->cdate->OldValue) ?>">
+</td>
+    <?php } ?>
+<?php
+// Render list options (body, right)
+$Grid->ListOptions->render("body", "right", $Grid->RowIndex);
+?>
+<script>
+loadjs.ready(["fappointmentgrid","load"], () => fappointmentgrid.updateLists(<?= $Grid->RowIndex ?>, true));
+</script>
+    </tr>
+<?php
+}
+?>
+</tbody>
+</table><!-- /.ew-table -->
+</div><!-- /.ew-grid-middle-panel -->
+<?php if ($Grid->CurrentMode == "add" || $Grid->CurrentMode == "copy") { ?>
+<input type="hidden" name="<?= $Grid->FormKeyCountName ?>" id="<?= $Grid->FormKeyCountName ?>" value="<?= $Grid->KeyCount ?>">
+<?= $Grid->MultiSelectKey ?>
+<?php } ?>
+<?php if ($Grid->CurrentMode == "edit") { ?>
+<input type="hidden" name="<?= $Grid->FormKeyCountName ?>" id="<?= $Grid->FormKeyCountName ?>" value="<?= $Grid->KeyCount ?>">
+<?= $Grid->MultiSelectKey ?>
+<?php } ?>
+<?php if ($Grid->CurrentMode == "") { ?>
+<input type="hidden" name="action" id="action" value="">
+<?php } ?>
+<input type="hidden" name="detailpage" value="fappointmentgrid">
+</div><!-- /.ew-list-form -->
+<?php
+// Close recordset
+if ($Grid->Recordset) {
+    $Grid->Recordset->close();
+}
+?>
+<?php if ($Grid->ShowOtherOptions) { ?>
+<div class="card-footer ew-grid-lower-panel">
+<?php $Grid->OtherOptions->render("body", "bottom") ?>
+</div>
+<?php } ?>
+</div><!-- /.ew-grid -->
+<?php } else { ?>
+<div class="ew-list-other-options">
+<?php $Grid->OtherOptions->render("body") ?>
+</div>
+<?php } ?>
+<?php if (!$Grid->isExport()) { ?>
+<script>
+// Field event handlers
+loadjs.ready("head", function() {
+    ew.addEventHandlers("appointment");
+});
+</script>
+<script>
+loadjs.ready("load", function () {
+    // Write your table-specific startup script here, no need to add script tags.
+});
+</script>
+<?php } ?>
