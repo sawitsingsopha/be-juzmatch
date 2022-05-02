@@ -622,8 +622,8 @@ class DocJuzmatch1Grid extends DocJuzmatch1
         $this->file_house_regis->Visible = false;
         $this->file_titledeed->Visible = false;
         $this->file_other->Visible = false;
-        $this->attach_file->setVisibility();
-        $this->status->setVisibility();
+        $this->attach_file->Visible = false;
+        $this->status->Visible = false;
         $this->doc_date->Visible = false;
         $this->buyer_booking_asset_id->Visible = false;
         $this->doc_creden_id->Visible = false;
@@ -1173,12 +1173,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
         if ($CurrentForm->hasValue("x_contact_phone") && $CurrentForm->hasValue("o_contact_phone") && $this->contact_phone->CurrentValue != $this->contact_phone->OldValue) {
             return false;
         }
-        if ($CurrentForm->hasValue("x_attach_file") && $CurrentForm->hasValue("o_attach_file") && $this->attach_file->CurrentValue != $this->attach_file->OldValue) {
-            return false;
-        }
-        if ($CurrentForm->hasValue("x_status") && $CurrentForm->hasValue("o_status") && $this->status->CurrentValue != $this->status->OldValue) {
-            return false;
-        }
         return true;
     }
 
@@ -1292,8 +1286,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
         $this->contact_email->clearErrorMessage();
         $this->contact_lineid->clearErrorMessage();
         $this->contact_phone->clearErrorMessage();
-        $this->attach_file->clearErrorMessage();
-        $this->status->clearErrorMessage();
         $this->cdate->clearErrorMessage();
     }
 
@@ -2065,32 +2057,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
             $this->contact_phone->setOldValue($CurrentForm->getValue("o_contact_phone"));
         }
 
-        // Check field name 'attach_file' first before field var 'x_attach_file'
-        $val = $CurrentForm->hasValue("attach_file") ? $CurrentForm->getValue("attach_file") : $CurrentForm->getValue("x_attach_file");
-        if (!$this->attach_file->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->attach_file->Visible = false; // Disable update for API request
-            } else {
-                $this->attach_file->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_attach_file")) {
-            $this->attach_file->setOldValue($CurrentForm->getValue("o_attach_file"));
-        }
-
-        // Check field name 'status' first before field var 'x_status'
-        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
-        if (!$this->status->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->status->Visible = false; // Disable update for API request
-            } else {
-                $this->status->setFormValue($val);
-            }
-        }
-        if ($CurrentForm->hasValue("o_status")) {
-            $this->status->setOldValue($CurrentForm->getValue("o_status"));
-        }
-
         // Check field name 'cdate' first before field var 'x_cdate'
         $val = $CurrentForm->hasValue("cdate") ? $CurrentForm->getValue("cdate") : $CurrentForm->getValue("x_cdate");
         if (!$this->cdate->IsDetailKey) {
@@ -2151,8 +2117,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
         $this->contact_email->CurrentValue = $this->contact_email->FormValue;
         $this->contact_lineid->CurrentValue = $this->contact_lineid->FormValue;
         $this->contact_phone->CurrentValue = $this->contact_phone->FormValue;
-        $this->attach_file->CurrentValue = $this->attach_file->FormValue;
-        $this->status->CurrentValue = $this->status->FormValue;
         $this->cdate->CurrentValue = $this->cdate->FormValue;
         $this->cdate->CurrentValue = UnFormatDateTime($this->cdate->CurrentValue, $this->cdate->formatPattern());
     }
@@ -2476,8 +2440,10 @@ class DocJuzmatch1Grid extends DocJuzmatch1
         // file_other
 
         // attach_file
+        $this->attach_file->CellCssStyle = "white-space: nowrap;";
 
         // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // doc_date
         $this->doc_date->CellCssStyle = "white-space: nowrap;";
@@ -2629,18 +2595,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
             // contact_phone
             $this->contact_phone->ViewValue = $this->contact_phone->CurrentValue;
             $this->contact_phone->ViewCustomAttributes = "";
-
-            // attach_file
-            $this->attach_file->ViewValue = $this->attach_file->CurrentValue;
-            $this->attach_file->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
 
             // cdate
             $this->cdate->ViewValue = $this->cdate->CurrentValue;
@@ -2824,16 +2778,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
             $this->contact_phone->LinkCustomAttributes = "";
             $this->contact_phone->HrefValue = "";
             $this->contact_phone->TooltipValue = "";
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-            $this->attach_file->TooltipValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
 
             // cdate
             $this->cdate->LinkCustomAttributes = "";
@@ -3115,21 +3059,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
             $this->contact_phone->EditValue = HtmlEncode($this->contact_phone->CurrentValue);
             $this->contact_phone->PlaceHolder = RemoveHtml($this->contact_phone->caption());
 
-            // attach_file
-            $this->attach_file->setupEditAttributes();
-            $this->attach_file->EditCustomAttributes = "";
-            if (!$this->attach_file->Raw) {
-                $this->attach_file->CurrentValue = HtmlDecode($this->attach_file->CurrentValue);
-            }
-            $this->attach_file->EditValue = HtmlEncode($this->attach_file->CurrentValue);
-            $this->attach_file->PlaceHolder = RemoveHtml($this->attach_file->caption());
-
-            // status
-            $this->status->setupEditAttributes();
-            $this->status->EditCustomAttributes = "";
-            $this->status->EditValue = $this->status->options(true);
-            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
             // cdate
 
             // Add refer script
@@ -3257,14 +3186,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
             // contact_phone
             $this->contact_phone->LinkCustomAttributes = "";
             $this->contact_phone->HrefValue = "";
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
 
             // cdate
             $this->cdate->LinkCustomAttributes = "";
@@ -3545,21 +3466,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
             $this->contact_phone->EditValue = HtmlEncode($this->contact_phone->CurrentValue);
             $this->contact_phone->PlaceHolder = RemoveHtml($this->contact_phone->caption());
 
-            // attach_file
-            $this->attach_file->setupEditAttributes();
-            $this->attach_file->EditCustomAttributes = "";
-            if (!$this->attach_file->Raw) {
-                $this->attach_file->CurrentValue = HtmlDecode($this->attach_file->CurrentValue);
-            }
-            $this->attach_file->EditValue = HtmlEncode($this->attach_file->CurrentValue);
-            $this->attach_file->PlaceHolder = RemoveHtml($this->attach_file->caption());
-
-            // status
-            $this->status->setupEditAttributes();
-            $this->status->EditCustomAttributes = "";
-            $this->status->EditValue = $this->status->options(true);
-            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
             // cdate
 
             // Edit refer script
@@ -3687,14 +3593,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
             // contact_phone
             $this->contact_phone->LinkCustomAttributes = "";
             $this->contact_phone->HrefValue = "";
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
 
             // cdate
             $this->cdate->LinkCustomAttributes = "";
@@ -3882,16 +3780,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
         if ($this->contact_phone->Required) {
             if (!$this->contact_phone->IsDetailKey && EmptyValue($this->contact_phone->FormValue)) {
                 $this->contact_phone->addErrorMessage(str_replace("%s", $this->contact_phone->caption(), $this->contact_phone->RequiredErrorMessage));
-            }
-        }
-        if ($this->attach_file->Required) {
-            if (!$this->attach_file->IsDetailKey && EmptyValue($this->attach_file->FormValue)) {
-                $this->attach_file->addErrorMessage(str_replace("%s", $this->attach_file->caption(), $this->attach_file->RequiredErrorMessage));
-            }
-        }
-        if ($this->status->Required) {
-            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
-                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
         if ($this->cdate->Required) {
@@ -4106,12 +3994,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
             // contact_phone
             $this->contact_phone->setDbValueDef($rsnew, $this->contact_phone->CurrentValue, null, $this->contact_phone->ReadOnly);
 
-            // attach_file
-            $this->attach_file->setDbValueDef($rsnew, $this->attach_file->CurrentValue, null, $this->attach_file->ReadOnly);
-
-            // status
-            $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
-
             // cdate
             $this->cdate->CurrentValue = CurrentDateTime();
             $this->cdate->setDbValueDef($rsnew, $this->cdate->CurrentValue, null);
@@ -4310,12 +4192,6 @@ class DocJuzmatch1Grid extends DocJuzmatch1
 
         // contact_phone
         $this->contact_phone->setDbValueDef($rsnew, $this->contact_phone->CurrentValue, null, false);
-
-        // attach_file
-        $this->attach_file->setDbValueDef($rsnew, $this->attach_file->CurrentValue, null, false);
-
-        // status
-        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, false);
 
         // cdate
         $this->cdate->CurrentValue = CurrentDateTime();

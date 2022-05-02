@@ -75,8 +75,8 @@ class Language
 
         // Set up locale for the language
         $locale = LocaleConvert();
-        $CURRENCY_CODE = $locale["currency_code"];
-        $CURRENCY_SYMBOL = $locale["currency_symbol"];
+        $CURRENCY_CODE = "THB";
+        $CURRENCY_SYMBOL = "฿";
         $DECIMAL_SEPARATOR = $locale["decimal_separator"];
         $GROUPING_SEPARATOR = $locale["grouping_separator"];
         $NUMBER_FORMAT = $locale["number"];

@@ -61,15 +61,13 @@ loadjs.ready(["wrapper", "head"], function () {
         ["company_seal_email", [fields.company_seal_email.visible && fields.company_seal_email.required ? ew.Validators.required(fields.company_seal_email.caption) : null], fields.company_seal_email.isInvalid],
         ["file_idcard", [fields.file_idcard.visible && fields.file_idcard.required ? ew.Validators.fileRequired(fields.file_idcard.caption) : null], fields.file_idcard.isInvalid],
         ["file_house_regis", [fields.file_house_regis.visible && fields.file_house_regis.required ? ew.Validators.fileRequired(fields.file_house_regis.caption) : null], fields.file_house_regis.isInvalid],
+        ["file_loan", [fields.file_loan.visible && fields.file_loan.required ? ew.Validators.fileRequired(fields.file_loan.caption) : null], fields.file_loan.isInvalid],
         ["file_other", [fields.file_other.visible && fields.file_other.required ? ew.Validators.fileRequired(fields.file_other.caption) : null], fields.file_other.isInvalid],
         ["contact_address", [fields.contact_address.visible && fields.contact_address.required ? ew.Validators.required(fields.contact_address.caption) : null], fields.contact_address.isInvalid],
         ["contact_address2", [fields.contact_address2.visible && fields.contact_address2.required ? ew.Validators.required(fields.contact_address2.caption) : null], fields.contact_address2.isInvalid],
         ["contact_email", [fields.contact_email.visible && fields.contact_email.required ? ew.Validators.required(fields.contact_email.caption) : null], fields.contact_email.isInvalid],
         ["contact_lineid", [fields.contact_lineid.visible && fields.contact_lineid.required ? ew.Validators.required(fields.contact_lineid.caption) : null], fields.contact_lineid.isInvalid],
         ["contact_phone", [fields.contact_phone.visible && fields.contact_phone.required ? ew.Validators.required(fields.contact_phone.caption) : null], fields.contact_phone.isInvalid],
-        ["file_loan", [fields.file_loan.visible && fields.file_loan.required ? ew.Validators.required(fields.file_loan.caption) : null], fields.file_loan.isInvalid],
-        ["attach_file", [fields.attach_file.visible && fields.attach_file.required ? ew.Validators.required(fields.attach_file.caption) : null], fields.attach_file.isInvalid],
-        ["status", [fields.status.visible && fields.status.required ? ew.Validators.required(fields.status.caption) : null], fields.status.isInvalid],
         ["cdate", [fields.cdate.visible && fields.cdate.required ? ew.Validators.required(fields.cdate.caption) : null], fields.cdate.isInvalid],
         ["cuser", [fields.cuser.visible && fields.cuser.required ? ew.Validators.required(fields.cuser.caption) : null], fields.cuser.isInvalid],
         ["cip", [fields.cip.visible && fields.cip.required ? ew.Validators.required(fields.cip.caption) : null], fields.cip.isInvalid],
@@ -89,7 +87,6 @@ loadjs.ready(["wrapper", "head"], function () {
     fdoc_juzmatch2add.validateRequired = ew.CLIENT_VALIDATE;
 
     // Dynamic selection lists
-    fdoc_juzmatch2add.lists.status = <?= $Page->status->toClientList($Page) ?>;
     loadjs.done("fdoc_juzmatch2add");
 });
 </script>
@@ -116,6 +113,36 @@ $Page->showMessage();
 <input type="hidden" name="fk_invertor_booking_id" value="<?= HtmlEncode($Page->investor_booking_id->getSessionValue()) ?>">
 <?php } ?>
 <div class="ew-add-div"><!-- page* -->
+<style>
+.card {
+    width: 100%;
+    height: auto;
+    padding: 20px 30px;
+    margin-bottom: 12px;
+    border-radius: 12px;
+    -webkit-box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 15%);
+    box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 15%);
+    border: 2px solid #006aec;
+}
+label.error{
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875em;
+    color: #DC3545;
+}
+.form-control.error{
+    border-color: #DC3545;
+    padding-right: calc(1.5em + 0.75rem);
+    background-image: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23DC3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23DC3545' stroke='none'/%3e%3c/svg%3e);
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+}
+</style>
+
+<div class="card">
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->asset_code->Visible) { // asset_code ?>
     <div id="r_asset_code"<?= $Page->asset_code->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_asset_code" for="x_asset_code" class="<?= $Page->LeftColumnClass ?>"><?= $Page->asset_code->caption() ?><?= $Page->asset_code->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -128,6 +155,8 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->asset_project->Visible) { // asset_project ?>
     <div id="r_asset_project"<?= $Page->asset_project->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_asset_project" for="x_asset_project" class="<?= $Page->LeftColumnClass ?>"><?= $Page->asset_project->caption() ?><?= $Page->asset_project->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -140,6 +169,11 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->asset_deed->Visible) { // asset_deed ?>
     <div id="r_asset_deed"<?= $Page->asset_deed->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_asset_deed" for="x_asset_deed" class="<?= $Page->LeftColumnClass ?>"><?= $Page->asset_deed->caption() ?><?= $Page->asset_deed->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -152,6 +186,8 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->asset_area->Visible) { // asset_area ?>
     <div id="r_asset_area"<?= $Page->asset_area->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_asset_area" for="x_asset_area" class="<?= $Page->LeftColumnClass ?>"><?= $Page->asset_area->caption() ?><?= $Page->asset_area->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -164,54 +200,12 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->investor_name->Visible) { // investor_name ?>
-    <div id="r_investor_name"<?= $Page->investor_name->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_investor_name" for="x_investor_name" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_name->caption() ?><?= $Page->investor_name->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->investor_name->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_investor_name">
-<input type="<?= $Page->investor_name->getInputTextType() ?>" name="x_investor_name" id="x_investor_name" data-table="doc_juzmatch2" data-field="x_investor_name" value="<?= $Page->investor_name->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->investor_name->getPlaceHolder()) ?>"<?= $Page->investor_name->editAttributes() ?> aria-describedby="x_investor_name_help">
-<?= $Page->investor_name->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->investor_name->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->investor_lname->Visible) { // investor_lname ?>
-    <div id="r_investor_lname"<?= $Page->investor_lname->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_investor_lname" for="x_investor_lname" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_lname->caption() ?><?= $Page->investor_lname->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->investor_lname->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_investor_lname">
-<input type="<?= $Page->investor_lname->getInputTextType() ?>" name="x_investor_lname" id="x_investor_lname" data-table="doc_juzmatch2" data-field="x_investor_lname" value="<?= $Page->investor_lname->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->investor_lname->getPlaceHolder()) ?>"<?= $Page->investor_lname->editAttributes() ?> aria-describedby="x_investor_lname_help">
-<?= $Page->investor_lname->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->investor_lname->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->investor_email->Visible) { // investor_email ?>
-    <div id="r_investor_email"<?= $Page->investor_email->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_investor_email" for="x_investor_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_email->caption() ?><?= $Page->investor_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->investor_email->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_investor_email">
-<input type="<?= $Page->investor_email->getInputTextType() ?>" name="x_investor_email" id="x_investor_email" data-table="doc_juzmatch2" data-field="x_investor_email" value="<?= $Page->investor_email->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->investor_email->getPlaceHolder()) ?>"<?= $Page->investor_email->editAttributes() ?> aria-describedby="x_investor_email_help">
-<?= $Page->investor_email->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->investor_email->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->investor_idcard->Visible) { // investor_idcard ?>
-    <div id="r_investor_idcard"<?= $Page->investor_idcard->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_investor_idcard" for="x_investor_idcard" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_idcard->caption() ?><?= $Page->investor_idcard->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->investor_idcard->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_investor_idcard">
-<input type="<?= $Page->investor_idcard->getInputTextType() ?>" name="x_investor_idcard" id="x_investor_idcard" data-table="doc_juzmatch2" data-field="x_investor_idcard" value="<?= $Page->investor_idcard->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->investor_idcard->getPlaceHolder()) ?>"<?= $Page->investor_idcard->editAttributes() ?> aria-describedby="x_investor_idcard_help">
-<?= $Page->investor_idcard->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->investor_idcard->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->investor_homeno->Visible) { // investor_homeno ?>
     <div id="r_investor_homeno"<?= $Page->investor_homeno->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_investor_homeno" for="x_investor_homeno" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_homeno->caption() ?><?= $Page->investor_homeno->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -224,6 +218,25 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
+<?php if ($Page->investor_idcard->Visible) { // investor_idcard ?>
+    <div id="r_investor_idcard"<?= $Page->investor_idcard->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_investor_idcard" for="x_investor_idcard" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_idcard->caption() ?><?= $Page->investor_idcard->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->investor_idcard->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_investor_idcard">
+<input type="<?= $Page->investor_idcard->getInputTextType() ?>" name="x_investor_idcard" id="x_investor_idcard" data-table="doc_juzmatch2" data-field="x_investor_idcard" value="<?= $Page->investor_idcard->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->investor_idcard->getPlaceHolder()) ?>"<?= $Page->investor_idcard->editAttributes() ?> aria-describedby="x_investor_idcard_help">
+<?= $Page->investor_idcard->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->investor_idcard->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->investment_money->Visible) { // investment_money ?>
     <div id="r_investment_money"<?= $Page->investment_money->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_investment_money" for="x_investment_money" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investment_money->caption() ?><?= $Page->investment_money->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -236,6 +249,8 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->investment_money_txt->Visible) { // investment_money_txt ?>
     <div id="r_investment_money_txt"<?= $Page->investment_money_txt->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_investment_money_txt" for="x_investment_money_txt" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investment_money_txt->caption() ?><?= $Page->investment_money_txt->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -248,6 +263,11 @@ $Page->showMessage();
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->loan_contact_date->Visible) { // loan_contact_date ?>
     <div id="r_loan_contact_date"<?= $Page->loan_contact_date->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_loan_contact_date" for="x_loan_contact_date" class="<?= $Page->LeftColumnClass ?>"><?= $Page->loan_contact_date->caption() ?><?= $Page->loan_contact_date->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -286,6 +306,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->contract_expired->Visible) { // contract_expired ?>
     <div id="r_contract_expired"<?= $Page->contract_expired->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_contract_expired" for="x_contract_expired" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contract_expired->caption() ?><?= $Page->contract_expired->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -324,6 +346,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->first_benefits_month->Visible) { // first_benefits_month ?>
     <div id="r_first_benefits_month"<?= $Page->first_benefits_month->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_first_benefits_month" for="x_first_benefits_month" class="<?= $Page->LeftColumnClass ?>"><?= $Page->first_benefits_month->caption() ?><?= $Page->first_benefits_month->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -336,6 +363,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->one_installment_amount->Visible) { // one_installment_amount ?>
     <div id="r_one_installment_amount"<?= $Page->one_installment_amount->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_one_installment_amount" for="x_one_installment_amount" class="<?= $Page->LeftColumnClass ?>"><?= $Page->one_installment_amount->caption() ?><?= $Page->one_installment_amount->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -348,6 +377,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->two_installment_amount1->Visible) { // two_installment_amount1 ?>
     <div id="r_two_installment_amount1"<?= $Page->two_installment_amount1->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_two_installment_amount1" for="x_two_installment_amount1" class="<?= $Page->LeftColumnClass ?>"><?= $Page->two_installment_amount1->caption() ?><?= $Page->two_installment_amount1->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -360,6 +394,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->two_installment_amount2->Visible) { // two_installment_amount2 ?>
     <div id="r_two_installment_amount2"<?= $Page->two_installment_amount2->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_two_installment_amount2" for="x_two_installment_amount2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->two_installment_amount2->caption() ?><?= $Page->two_installment_amount2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -372,6 +408,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->investor_paid_amount->Visible) { // investor_paid_amount ?>
     <div id="r_investor_paid_amount"<?= $Page->investor_paid_amount->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_investor_paid_amount" for="x_investor_paid_amount" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_paid_amount->caption() ?><?= $Page->investor_paid_amount->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -384,6 +425,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->first_benefits_date->Visible) { // first_benefits_date ?>
     <div id="r_first_benefits_date"<?= $Page->first_benefits_date->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_first_benefits_date" for="x_first_benefits_date" class="<?= $Page->LeftColumnClass ?>"><?= $Page->first_benefits_date->caption() ?><?= $Page->first_benefits_date->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -422,6 +465,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->one_benefit_amount->Visible) { // one_benefit_amount ?>
     <div id="r_one_benefit_amount"<?= $Page->one_benefit_amount->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_one_benefit_amount" for="x_one_benefit_amount" class="<?= $Page->LeftColumnClass ?>"><?= $Page->one_benefit_amount->caption() ?><?= $Page->one_benefit_amount->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -434,6 +482,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->two_benefit_amount1->Visible) { // two_benefit_amount1 ?>
     <div id="r_two_benefit_amount1"<?= $Page->two_benefit_amount1->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_two_benefit_amount1" for="x_two_benefit_amount1" class="<?= $Page->LeftColumnClass ?>"><?= $Page->two_benefit_amount1->caption() ?><?= $Page->two_benefit_amount1->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -446,6 +496,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->two_benefit_amount2->Visible) { // two_benefit_amount2 ?>
     <div id="r_two_benefit_amount2"<?= $Page->two_benefit_amount2->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_two_benefit_amount2" for="x_two_benefit_amount2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->two_benefit_amount2->caption() ?><?= $Page->two_benefit_amount2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -458,6 +513,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->management_agent_date->Visible) { // management_agent_date ?>
     <div id="r_management_agent_date"<?= $Page->management_agent_date->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_management_agent_date" for="x_management_agent_date" class="<?= $Page->LeftColumnClass ?>"><?= $Page->management_agent_date->caption() ?><?= $Page->management_agent_date->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -496,6 +553,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->begin_date->Visible) { // begin_date ?>
     <div id="r_begin_date"<?= $Page->begin_date->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_begin_date" for="x_begin_date" class="<?= $Page->LeftColumnClass ?>"><?= $Page->begin_date->caption() ?><?= $Page->begin_date->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -508,6 +570,144 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+
+
+<div class="row">
+<div class="col-12 col-xl-6">
+<?php if ($Page->contact_address->Visible) { // contact_address ?>
+    <div id="r_contact_address"<?= $Page->contact_address->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_contact_address" for="x_contact_address" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_address->caption() ?><?= $Page->contact_address->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_address->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_contact_address">
+<input type="<?= $Page->contact_address->getInputTextType() ?>" name="x_contact_address" id="x_contact_address" data-table="doc_juzmatch2" data-field="x_contact_address" value="<?= $Page->contact_address->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_address->getPlaceHolder()) ?>"<?= $Page->contact_address->editAttributes() ?> aria-describedby="x_contact_address_help">
+<?= $Page->contact_address->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->contact_address->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+<div class="col-12 col-xl-6">
+<?php if ($Page->contact_address2->Visible) { // contact_address2 ?>
+    <div id="r_contact_address2"<?= $Page->contact_address2->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_contact_address2" for="x_contact_address2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_address2->caption() ?><?= $Page->contact_address2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_address2->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_contact_address2">
+<input type="<?= $Page->contact_address2->getInputTextType() ?>" name="x_contact_address2" id="x_contact_address2" data-table="doc_juzmatch2" data-field="x_contact_address2" value="<?= $Page->contact_address2->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_address2->getPlaceHolder()) ?>"<?= $Page->contact_address2->editAttributes() ?> aria-describedby="x_contact_address2_help">
+<?= $Page->contact_address2->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->contact_address2->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
+<?php if ($Page->contact_email->Visible) { // contact_email ?>
+    <div id="r_contact_email"<?= $Page->contact_email->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_contact_email" for="x_contact_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_email->caption() ?><?= $Page->contact_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_email->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_contact_email">
+<input type="<?= $Page->contact_email->getInputTextType() ?>" name="x_contact_email" id="x_contact_email" data-table="doc_juzmatch2" data-field="x_contact_email" value="<?= $Page->contact_email->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_email->getPlaceHolder()) ?>"<?= $Page->contact_email->editAttributes() ?> aria-describedby="x_contact_email_help">
+<?= $Page->contact_email->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->contact_email->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+<div class="col-12 col-xl-6">
+<?php if ($Page->contact_lineid->Visible) { // contact_lineid ?>
+    <div id="r_contact_lineid"<?= $Page->contact_lineid->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_contact_lineid" for="x_contact_lineid" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_lineid->caption() ?><?= $Page->contact_lineid->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_lineid->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_contact_lineid">
+<input type="<?= $Page->contact_lineid->getInputTextType() ?>" name="x_contact_lineid" id="x_contact_lineid" data-table="doc_juzmatch2" data-field="x_contact_lineid" value="<?= $Page->contact_lineid->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_lineid->getPlaceHolder()) ?>"<?= $Page->contact_lineid->editAttributes() ?> aria-describedby="x_contact_lineid_help">
+<?= $Page->contact_lineid->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->contact_lineid->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+</div>
+<div class="row">
+<div class="col-12 col-xl-6">
+<?php if ($Page->contact_phone->Visible) { // contact_phone ?>
+    <div id="r_contact_phone"<?= $Page->contact_phone->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_contact_phone" for="x_contact_phone" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_phone->caption() ?><?= $Page->contact_phone->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_phone->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_contact_phone">
+<input type="<?= $Page->contact_phone->getInputTextType() ?>" name="x_contact_phone" id="x_contact_phone" data-table="doc_juzmatch2" data-field="x_contact_phone" value="<?= $Page->contact_phone->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_phone->getPlaceHolder()) ?>"<?= $Page->contact_phone->editAttributes() ?> aria-describedby="x_contact_phone_help">
+<?= $Page->contact_phone->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->contact_phone->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+</div>
+
+
+<div class="row">
+<div class="col-12 col-xl-6">
+<?php if ($Page->investor_name->Visible) { // investor_name ?>
+    <div id="r_investor_name"<?= $Page->investor_name->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_investor_name" for="x_investor_name" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_name->caption() ?><?= $Page->investor_name->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->investor_name->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_investor_name">
+<input type="<?= $Page->investor_name->getInputTextType() ?>" name="x_investor_name" id="x_investor_name" data-table="doc_juzmatch2" data-field="x_investor_name" value="<?= $Page->investor_name->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->investor_name->getPlaceHolder()) ?>"<?= $Page->investor_name->editAttributes() ?> aria-describedby="x_investor_name_help">
+<?= $Page->investor_name->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->investor_name->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+<div class="col-12 col-xl-6">
+<?php if ($Page->investor_lname->Visible) { // investor_lname ?>
+    <div id="r_investor_lname"<?= $Page->investor_lname->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_investor_lname" for="x_investor_lname" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_lname->caption() ?><?= $Page->investor_lname->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->investor_lname->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_investor_lname">
+<input type="<?= $Page->investor_lname->getInputTextType() ?>" name="x_investor_lname" id="x_investor_lname" data-table="doc_juzmatch2" data-field="x_investor_lname" value="<?= $Page->investor_lname->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->investor_lname->getPlaceHolder()) ?>"<?= $Page->investor_lname->editAttributes() ?> aria-describedby="x_investor_lname_help">
+<?= $Page->investor_lname->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->investor_lname->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+</div>
+<div class="row">
+<div class="col-12 col-xl-6">
+<?php if ($Page->investor_email->Visible) { // investor_email ?>
+    <div id="r_investor_email"<?= $Page->investor_email->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_investor_email" for="x_investor_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_email->caption() ?><?= $Page->investor_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->investor_email->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_investor_email">
+<input type="<?= $Page->investor_email->getInputTextType() ?>" name="x_investor_email" id="x_investor_email" data-table="doc_juzmatch2" data-field="x_investor_email" value="<?= $Page->investor_email->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->investor_email->getPlaceHolder()) ?>"<?= $Page->investor_email->editAttributes() ?> aria-describedby="x_investor_email_help">
+<?= $Page->investor_email->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->investor_email->getErrorMessage() ?></div>
+</span>
+</div></div>
+    </div>
+<?php } ?>
+</div>
+<div class="col-12 col-xl-6">
+
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->investor_witness_name->Visible) { // investor_witness_name ?>
     <div id="r_investor_witness_name"<?= $Page->investor_witness_name->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_investor_witness_name" for="x_investor_witness_name" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_witness_name->caption() ?><?= $Page->investor_witness_name->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -520,6 +720,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->investor_witness_lname->Visible) { // investor_witness_lname ?>
     <div id="r_investor_witness_lname"<?= $Page->investor_witness_lname->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_investor_witness_lname" for="x_investor_witness_lname" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_witness_lname->caption() ?><?= $Page->investor_witness_lname->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -532,6 +734,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->investor_witness_email->Visible) { // investor_witness_email ?>
     <div id="r_investor_witness_email"<?= $Page->investor_witness_email->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_investor_witness_email" for="x_investor_witness_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->investor_witness_email->caption() ?><?= $Page->investor_witness_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -544,6 +751,13 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority_name->Visible) { // juzmatch_authority_name ?>
     <div id="r_juzmatch_authority_name"<?= $Page->juzmatch_authority_name->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority_name" for="x_juzmatch_authority_name" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority_name->caption() ?><?= $Page->juzmatch_authority_name->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -556,6 +770,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority_lname->Visible) { // juzmatch_authority_lname ?>
     <div id="r_juzmatch_authority_lname"<?= $Page->juzmatch_authority_lname->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority_lname" for="x_juzmatch_authority_lname" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority_lname->caption() ?><?= $Page->juzmatch_authority_lname->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -568,6 +784,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority_email->Visible) { // juzmatch_authority_email ?>
     <div id="r_juzmatch_authority_email"<?= $Page->juzmatch_authority_email->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority_email" for="x_juzmatch_authority_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority_email->caption() ?><?= $Page->juzmatch_authority_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -580,6 +801,13 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority_witness_name->Visible) { // juzmatch_authority_witness_name ?>
     <div id="r_juzmatch_authority_witness_name"<?= $Page->juzmatch_authority_witness_name->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority_witness_name" for="x_juzmatch_authority_witness_name" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority_witness_name->caption() ?><?= $Page->juzmatch_authority_witness_name->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -592,6 +820,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority_witness_lname->Visible) { // juzmatch_authority_witness_lname ?>
     <div id="r_juzmatch_authority_witness_lname"<?= $Page->juzmatch_authority_witness_lname->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority_witness_lname" for="x_juzmatch_authority_witness_lname" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority_witness_lname->caption() ?><?= $Page->juzmatch_authority_witness_lname->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -604,6 +834,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority_witness_email->Visible) { // juzmatch_authority_witness_email ?>
     <div id="r_juzmatch_authority_witness_email"<?= $Page->juzmatch_authority_witness_email->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority_witness_email" for="x_juzmatch_authority_witness_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority_witness_email->caption() ?><?= $Page->juzmatch_authority_witness_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -616,6 +851,13 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority2_name->Visible) { // juzmatch_authority2_name ?>
     <div id="r_juzmatch_authority2_name"<?= $Page->juzmatch_authority2_name->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority2_name" for="x_juzmatch_authority2_name" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority2_name->caption() ?><?= $Page->juzmatch_authority2_name->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -628,6 +870,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority2_lname->Visible) { // juzmatch_authority2_lname ?>
     <div id="r_juzmatch_authority2_lname"<?= $Page->juzmatch_authority2_lname->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority2_lname" for="x_juzmatch_authority2_lname" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority2_lname->caption() ?><?= $Page->juzmatch_authority2_lname->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -640,6 +884,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->juzmatch_authority2_email->Visible) { // juzmatch_authority2_email ?>
     <div id="r_juzmatch_authority2_email"<?= $Page->juzmatch_authority2_email->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_juzmatch_authority2_email" for="x_juzmatch_authority2_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->juzmatch_authority2_email->caption() ?><?= $Page->juzmatch_authority2_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -652,6 +901,13 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="row">
+<div class="col-12 col-xl-6">
 <?php if ($Page->company_seal_name->Visible) { // company_seal_name ?>
     <div id="r_company_seal_name"<?= $Page->company_seal_name->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_company_seal_name" for="x_company_seal_name" class="<?= $Page->LeftColumnClass ?>"><?= $Page->company_seal_name->caption() ?><?= $Page->company_seal_name->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -664,6 +920,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+<div class="col-12 col-xl-6">
 <?php if ($Page->company_seal_email->Visible) { // company_seal_email ?>
     <div id="r_company_seal_email"<?= $Page->company_seal_email->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_company_seal_email" for="x_company_seal_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->company_seal_email->caption() ?><?= $Page->company_seal_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -676,6 +934,11 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+</div>
+</div>
+</div>
+
+<div class="card">
 <?php if ($Page->file_idcard->Visible) { // file_idcard ?>
     <div id="r_file_idcard"<?= $Page->file_idcard->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_file_idcard" class="<?= $Page->LeftColumnClass ?>"><?= $Page->file_idcard->caption() ?><?= $Page->file_idcard->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -718,6 +981,27 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
+<?php if ($Page->file_loan->Visible) { // file_loan ?>
+    <div id="r_file_loan"<?= $Page->file_loan->rowAttributes() ?>>
+        <label id="elh_doc_juzmatch2_file_loan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->file_loan->caption() ?><?= $Page->file_loan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->file_loan->cellAttributes() ?>>
+<span id="el_doc_juzmatch2_file_loan">
+<div id="fd_x_file_loan" class="fileinput-button ew-file-drop-zone">
+    <input type="file" class="form-control ew-file-input" title="<?= $Page->file_loan->title() ?>" data-table="doc_juzmatch2" data-field="x_file_loan" name="x_file_loan" id="x_file_loan" lang="<?= CurrentLanguageID() ?>"<?= $Page->file_loan->editAttributes() ?> aria-describedby="x_file_loan_help"<?= ($Page->file_loan->ReadOnly || $Page->file_loan->Disabled) ? " disabled" : "" ?>>
+    <div class="text-muted ew-file-text"><?= $Language->phrase("ChooseFile") ?></div>
+</div>
+<?= $Page->file_loan->getCustomMessage() ?>
+<div class="invalid-feedback"><?= $Page->file_loan->getErrorMessage() ?></div>
+<input type="hidden" name="fn_x_file_loan" id= "fn_x_file_loan" value="<?= $Page->file_loan->Upload->FileName ?>">
+<input type="hidden" name="fa_x_file_loan" id= "fa_x_file_loan" value="0">
+<input type="hidden" name="fs_x_file_loan" id= "fs_x_file_loan" value="250">
+<input type="hidden" name="fx_x_file_loan" id= "fx_x_file_loan" value="<?= $Page->file_loan->UploadAllowedFileExt ?>">
+<input type="hidden" name="fm_x_file_loan" id= "fm_x_file_loan" value="<?= $Page->file_loan->UploadMaxFileSize ?>">
+<table id="ft_x_file_loan" class="table table-sm float-start ew-upload-table"><tbody class="files"></tbody></table>
+</span>
+</div></div>
+    </div>
+<?php } ?>
 <?php if ($Page->file_other->Visible) { // file_other ?>
     <div id="r_file_other"<?= $Page->file_other->rowAttributes() ?>>
         <label id="elh_doc_juzmatch2_file_other" class="<?= $Page->LeftColumnClass ?>"><?= $Page->file_other->caption() ?><?= $Page->file_other->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -739,128 +1023,8 @@ loadjs.ready(["fdoc_juzmatch2add", "datetimepicker"], function () {
 </div></div>
     </div>
 <?php } ?>
-<?php if ($Page->contact_address->Visible) { // contact_address ?>
-    <div id="r_contact_address"<?= $Page->contact_address->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_contact_address" for="x_contact_address" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_address->caption() ?><?= $Page->contact_address->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_address->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_contact_address">
-<input type="<?= $Page->contact_address->getInputTextType() ?>" name="x_contact_address" id="x_contact_address" data-table="doc_juzmatch2" data-field="x_contact_address" value="<?= $Page->contact_address->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_address->getPlaceHolder()) ?>"<?= $Page->contact_address->editAttributes() ?> aria-describedby="x_contact_address_help">
-<?= $Page->contact_address->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->contact_address->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->contact_address2->Visible) { // contact_address2 ?>
-    <div id="r_contact_address2"<?= $Page->contact_address2->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_contact_address2" for="x_contact_address2" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_address2->caption() ?><?= $Page->contact_address2->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_address2->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_contact_address2">
-<input type="<?= $Page->contact_address2->getInputTextType() ?>" name="x_contact_address2" id="x_contact_address2" data-table="doc_juzmatch2" data-field="x_contact_address2" value="<?= $Page->contact_address2->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_address2->getPlaceHolder()) ?>"<?= $Page->contact_address2->editAttributes() ?> aria-describedby="x_contact_address2_help">
-<?= $Page->contact_address2->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->contact_address2->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->contact_email->Visible) { // contact_email ?>
-    <div id="r_contact_email"<?= $Page->contact_email->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_contact_email" for="x_contact_email" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_email->caption() ?><?= $Page->contact_email->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_email->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_contact_email">
-<input type="<?= $Page->contact_email->getInputTextType() ?>" name="x_contact_email" id="x_contact_email" data-table="doc_juzmatch2" data-field="x_contact_email" value="<?= $Page->contact_email->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_email->getPlaceHolder()) ?>"<?= $Page->contact_email->editAttributes() ?> aria-describedby="x_contact_email_help">
-<?= $Page->contact_email->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->contact_email->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->contact_lineid->Visible) { // contact_lineid ?>
-    <div id="r_contact_lineid"<?= $Page->contact_lineid->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_contact_lineid" for="x_contact_lineid" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_lineid->caption() ?><?= $Page->contact_lineid->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_lineid->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_contact_lineid">
-<input type="<?= $Page->contact_lineid->getInputTextType() ?>" name="x_contact_lineid" id="x_contact_lineid" data-table="doc_juzmatch2" data-field="x_contact_lineid" value="<?= $Page->contact_lineid->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_lineid->getPlaceHolder()) ?>"<?= $Page->contact_lineid->editAttributes() ?> aria-describedby="x_contact_lineid_help">
-<?= $Page->contact_lineid->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->contact_lineid->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->contact_phone->Visible) { // contact_phone ?>
-    <div id="r_contact_phone"<?= $Page->contact_phone->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_contact_phone" for="x_contact_phone" class="<?= $Page->LeftColumnClass ?>"><?= $Page->contact_phone->caption() ?><?= $Page->contact_phone->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->contact_phone->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_contact_phone">
-<input type="<?= $Page->contact_phone->getInputTextType() ?>" name="x_contact_phone" id="x_contact_phone" data-table="doc_juzmatch2" data-field="x_contact_phone" value="<?= $Page->contact_phone->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->contact_phone->getPlaceHolder()) ?>"<?= $Page->contact_phone->editAttributes() ?> aria-describedby="x_contact_phone_help">
-<?= $Page->contact_phone->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->contact_phone->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->file_loan->Visible) { // file_loan ?>
-    <div id="r_file_loan"<?= $Page->file_loan->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_file_loan" for="x_file_loan" class="<?= $Page->LeftColumnClass ?>"><?= $Page->file_loan->caption() ?><?= $Page->file_loan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->file_loan->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_file_loan">
-<input type="<?= $Page->file_loan->getInputTextType() ?>" name="x_file_loan" id="x_file_loan" data-table="doc_juzmatch2" data-field="x_file_loan" value="<?= $Page->file_loan->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->file_loan->getPlaceHolder()) ?>"<?= $Page->file_loan->editAttributes() ?> aria-describedby="x_file_loan_help">
-<?= $Page->file_loan->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->file_loan->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->attach_file->Visible) { // attach_file ?>
-    <div id="r_attach_file"<?= $Page->attach_file->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_attach_file" for="x_attach_file" class="<?= $Page->LeftColumnClass ?>"><?= $Page->attach_file->caption() ?><?= $Page->attach_file->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->attach_file->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_attach_file">
-<input type="<?= $Page->attach_file->getInputTextType() ?>" name="x_attach_file" id="x_attach_file" data-table="doc_juzmatch2" data-field="x_attach_file" value="<?= $Page->attach_file->EditValue ?>" size="30" maxlength="250" placeholder="<?= HtmlEncode($Page->attach_file->getPlaceHolder()) ?>"<?= $Page->attach_file->editAttributes() ?> aria-describedby="x_attach_file_help">
-<?= $Page->attach_file->getCustomMessage() ?>
-<div class="invalid-feedback"><?= $Page->attach_file->getErrorMessage() ?></div>
-</span>
-</div></div>
-    </div>
-<?php } ?>
-<?php if ($Page->status->Visible) { // status ?>
-    <div id="r_status"<?= $Page->status->rowAttributes() ?>>
-        <label id="elh_doc_juzmatch2_status" for="x_status" class="<?= $Page->LeftColumnClass ?>"><?= $Page->status->caption() ?><?= $Page->status->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-        <div class="<?= $Page->RightColumnClass ?>"><div<?= $Page->status->cellAttributes() ?>>
-<span id="el_doc_juzmatch2_status">
-    <select
-        id="x_status"
-        name="x_status"
-        class="form-select ew-select<?= $Page->status->isInvalidClass() ?>"
-        data-select2-id="fdoc_juzmatch2add_x_status"
-        data-table="doc_juzmatch2"
-        data-field="x_status"
-        data-value-separator="<?= $Page->status->displayValueSeparatorAttribute() ?>"
-        data-placeholder="<?= HtmlEncode($Page->status->getPlaceHolder()) ?>"
-        <?= $Page->status->editAttributes() ?>>
-        <?= $Page->status->selectOptionListHtml("x_status") ?>
-    </select>
-    <?= $Page->status->getCustomMessage() ?>
-    <div class="invalid-feedback"><?= $Page->status->getErrorMessage() ?></div>
-<script>
-loadjs.ready("fdoc_juzmatch2add", function() {
-    var options = { name: "x_status", selectId: "fdoc_juzmatch2add_x_status" },
-        el = document.querySelector("select[data-select2-id='" + options.selectId + "']");
-    options.dropdownParent = el.closest("#ew-modal-dialog, #ew-add-opt-dialog");
-    if (fdoc_juzmatch2add.lists.status.lookupOptions.length) {
-        options.data = { id: "x_status", form: "fdoc_juzmatch2add" };
-    } else {
-        options.ajax = { id: "x_status", form: "fdoc_juzmatch2add", limit: ew.LOOKUP_PAGE_SIZE };
-    }
-    options.minimumResultsForSearch = Infinity;
-    options = Object.assign({}, ew.selectOptions, options, ew.vars.tables.doc_juzmatch2.fields.status.selectOptions);
-    ew.createSelect(options);
-});
-</script>
-</span>
-</div></div>
-    </div>
-<?php } ?>
+</div>
+
 </div><!-- /page* -->
     <?php if (strval($Page->investor_booking_id->getSessionValue()) != "") { ?>
     <input type="hidden" name="x_investor_booking_id" id="x_investor_booking_id" value="<?= HtmlEncode(strval($Page->investor_booking_id->getSessionValue())) ?>">

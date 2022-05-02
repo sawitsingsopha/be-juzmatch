@@ -71,6 +71,7 @@ class BuyerAllBookingAsset extends DbTable
     public $authorize_url;
     public $amount_net;
     public $amount_cust_fee;
+    public $count_show_signer_3;
 
     // Page ID
     public $PageID = ""; // To be overridden by subclass
@@ -889,6 +890,31 @@ class BuyerAllBookingAsset extends DbTable
         $this->amount_cust_fee->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
         $this->Fields['amount_cust_fee'] = &$this->amount_cust_fee;
 
+        // count_show_signer_3
+        $this->count_show_signer_3 = new DbField(
+            'buyer_all_booking_asset',
+            'buyer_all_booking_asset',
+            'x_count_show_signer_3',
+            'count_show_signer_3',
+            '`count_show_signer_3`',
+            '`count_show_signer_3`',
+            3,
+            11,
+            -1,
+            false,
+            '`count_show_signer_3`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'TEXT'
+        );
+        $this->count_show_signer_3->InputTextType = "text";
+        $this->count_show_signer_3->Nullable = false; // NOT NULL field
+        $this->count_show_signer_3->Sortable = false; // Allow sort
+        $this->count_show_signer_3->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+        $this->Fields['count_show_signer_3'] = &$this->count_show_signer_3;
+
         // Add Doctrine Cache
         $this->Cache = new ArrayCache();
         $this->CacheProfile = new \Doctrine\DBAL\Cache\QueryCacheProfile(0, $this->TableVar);
@@ -1615,6 +1641,7 @@ class BuyerAllBookingAsset extends DbTable
         $this->authorize_url->DbValue = $row['authorize_url'];
         $this->amount_net->DbValue = $row['amount_net'];
         $this->amount_cust_fee->DbValue = $row['amount_cust_fee'];
+        $this->count_show_signer_3->DbValue = $row['count_show_signer_3'];
     }
 
     // Delete uploaded files
@@ -1973,6 +2000,7 @@ class BuyerAllBookingAsset extends DbTable
         $this->authorize_url->setDbValue($row['authorize_url']);
         $this->amount_net->setDbValue($row['amount_net']);
         $this->amount_cust_fee->setDbValue($row['amount_cust_fee']);
+        $this->count_show_signer_3->setDbValue($row['count_show_signer_3']);
     }
 
     // Render list row values
@@ -2070,6 +2098,9 @@ class BuyerAllBookingAsset extends DbTable
 
         // amount_cust_fee
         $this->amount_cust_fee->CellCssStyle = "white-space: nowrap;";
+
+        // count_show_signer_3
+        $this->count_show_signer_3->CellCssStyle = "white-space: nowrap;";
 
         // buyer_booking_asset_id
         $this->buyer_booking_asset_id->ViewValue = $this->buyer_booking_asset_id->CurrentValue;
@@ -2265,6 +2296,11 @@ class BuyerAllBookingAsset extends DbTable
         $this->amount_cust_fee->ViewValue = FormatNumber($this->amount_cust_fee->ViewValue, $this->amount_cust_fee->formatPattern());
         $this->amount_cust_fee->ViewCustomAttributes = "";
 
+        // count_show_signer_3
+        $this->count_show_signer_3->ViewValue = $this->count_show_signer_3->CurrentValue;
+        $this->count_show_signer_3->ViewValue = FormatNumber($this->count_show_signer_3->ViewValue, $this->count_show_signer_3->formatPattern());
+        $this->count_show_signer_3->ViewCustomAttributes = "";
+
         // buyer_booking_asset_id
         $this->buyer_booking_asset_id->LinkCustomAttributes = "";
         $this->buyer_booking_asset_id->HrefValue = "";
@@ -2424,6 +2460,11 @@ class BuyerAllBookingAsset extends DbTable
         $this->amount_cust_fee->LinkCustomAttributes = "";
         $this->amount_cust_fee->HrefValue = "";
         $this->amount_cust_fee->TooltipValue = "";
+
+        // count_show_signer_3
+        $this->count_show_signer_3->LinkCustomAttributes = "";
+        $this->count_show_signer_3->HrefValue = "";
+        $this->count_show_signer_3->TooltipValue = "";
 
         // Call Row Rendered event
         $this->rowRendered();
@@ -2701,6 +2742,15 @@ class BuyerAllBookingAsset extends DbTable
         $this->amount_cust_fee->PlaceHolder = RemoveHtml($this->amount_cust_fee->caption());
         if (strval($this->amount_cust_fee->EditValue) != "" && is_numeric($this->amount_cust_fee->EditValue)) {
             $this->amount_cust_fee->EditValue = FormatNumber($this->amount_cust_fee->EditValue, null);
+        }
+
+        // count_show_signer_3
+        $this->count_show_signer_3->setupEditAttributes();
+        $this->count_show_signer_3->EditCustomAttributes = "";
+        $this->count_show_signer_3->EditValue = $this->count_show_signer_3->CurrentValue;
+        $this->count_show_signer_3->PlaceHolder = RemoveHtml($this->count_show_signer_3->caption());
+        if (strval($this->count_show_signer_3->EditValue) != "" && is_numeric($this->count_show_signer_3->EditValue)) {
+            $this->count_show_signer_3->EditValue = FormatNumber($this->count_show_signer_3->EditValue, null);
         }
 
         // Call Row Rendered event

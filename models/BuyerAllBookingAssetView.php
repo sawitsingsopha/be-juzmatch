@@ -568,6 +568,7 @@ class BuyerAllBookingAssetView extends BuyerAllBookingAsset
         $this->authorize_url->setVisibility();
         $this->amount_net->setVisibility();
         $this->amount_cust_fee->setVisibility();
+        $this->count_show_signer_3->setVisibility();
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -985,6 +986,7 @@ class BuyerAllBookingAssetView extends BuyerAllBookingAsset
         $this->authorize_url->setDbValue($row['authorize_url']);
         $this->amount_net->setDbValue($row['amount_net']);
         $this->amount_cust_fee->setDbValue($row['amount_cust_fee']);
+        $this->count_show_signer_3->setDbValue($row['count_show_signer_3']);
     }
 
     // Return a row with default values
@@ -1023,6 +1025,7 @@ class BuyerAllBookingAssetView extends BuyerAllBookingAsset
         $row['authorize_url'] = null;
         $row['amount_net'] = null;
         $row['amount_cust_fee'] = null;
+        $row['count_show_signer_3'] = null;
         return $row;
     }
 
@@ -1107,6 +1110,8 @@ class BuyerAllBookingAssetView extends BuyerAllBookingAsset
         // amount_net
 
         // amount_cust_fee
+
+        // count_show_signer_3
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {

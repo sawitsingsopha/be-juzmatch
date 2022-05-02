@@ -90,7 +90,7 @@ class GD extends PHPThumb
 
         if (@$options['isDataStream'] && @$options['format']) {
 
-            $this->oldImage = @imagecreatefromstring($fileName);
+            $this->oldImage = imagecreatefromstring($fileName);
             $this->setFormat($options['format']);
 
         } else {
@@ -100,16 +100,16 @@ class GD extends PHPThumb
 
             switch ($this->format) {
                 case 'GIF':
-                    $this->oldImage = @imagecreatefromgif($this->fileName);
+                    $this->oldImage = imagecreatefromgif($this->fileName);
                     break;
                 case 'JPG':
-                    $this->oldImage = @imagecreatefromjpeg($this->fileName);
+                    $this->oldImage = imagecreatefromjpeg($this->fileName);
                     break;
                 case 'PNG':
-                    $this->oldImage = @imagecreatefrompng($this->fileName);
+                    $this->oldImage = imagecreatefrompng($this->fileName);
                     break;
                 case 'STRING':
-                    $this->oldImage = @imagecreatefromstring($this->fileName);
+                    $this->oldImage = imagecreatefromstring($this->fileName);
                     break;
             }
 

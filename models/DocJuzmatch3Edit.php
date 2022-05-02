@@ -562,8 +562,8 @@ class DocJuzmatch3Edit extends DocJuzmatch3
         $this->file_house_regis->setVisibility();
         $this->file_titledeed->setVisibility();
         $this->file_other->setVisibility();
-        $this->attach_file->setVisibility();
-        $this->status->setVisibility();
+        $this->attach_file->Visible = false;
+        $this->status->Visible = false;
         $this->doc_creden_id->Visible = false;
         $this->cdate->Visible = false;
         $this->cuser->Visible = false;
@@ -1214,26 +1214,6 @@ class DocJuzmatch3Edit extends DocJuzmatch3
             }
         }
 
-        // Check field name 'attach_file' first before field var 'x_attach_file'
-        $val = $CurrentForm->hasValue("attach_file") ? $CurrentForm->getValue("attach_file") : $CurrentForm->getValue("x_attach_file");
-        if (!$this->attach_file->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->attach_file->Visible = false; // Disable update for API request
-            } else {
-                $this->attach_file->setFormValue($val);
-            }
-        }
-
-        // Check field name 'status' first before field var 'x_status'
-        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
-        if (!$this->status->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->status->Visible = false; // Disable update for API request
-            } else {
-                $this->status->setFormValue($val);
-            }
-        }
-
         // Check field name 'udate' first before field var 'x_udate'
         $val = $CurrentForm->hasValue("udate") ? $CurrentForm->getValue("udate") : $CurrentForm->getValue("x_udate");
         if (!$this->udate->IsDetailKey) {
@@ -1346,8 +1326,6 @@ class DocJuzmatch3Edit extends DocJuzmatch3
         $this->contact_email->CurrentValue = $this->contact_email->FormValue;
         $this->contact_lineid->CurrentValue = $this->contact_lineid->FormValue;
         $this->contact_phone->CurrentValue = $this->contact_phone->FormValue;
-        $this->attach_file->CurrentValue = $this->attach_file->FormValue;
-        $this->status->CurrentValue = $this->status->FormValue;
         $this->udate->CurrentValue = $this->udate->FormValue;
         $this->udate->CurrentValue = UnFormatDateTime($this->udate->CurrentValue, $this->udate->formatPattern());
         $this->uuser->CurrentValue = $this->uuser->FormValue;
@@ -1978,18 +1956,6 @@ class DocJuzmatch3Edit extends DocJuzmatch3
             }
             $this->file_other->ViewCustomAttributes = "";
 
-            // attach_file
-            $this->attach_file->ViewValue = $this->attach_file->CurrentValue;
-            $this->attach_file->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
-
             // cdate
             $this->cdate->ViewValue = $this->cdate->CurrentValue;
             $this->cdate->ViewValue = FormatDateTime($this->cdate->ViewValue, $this->cdate->formatPattern());
@@ -2214,14 +2180,6 @@ class DocJuzmatch3Edit extends DocJuzmatch3
             $this->file_other->LinkCustomAttributes = "";
             $this->file_other->HrefValue = "";
             $this->file_other->ExportHrefValue = $this->file_other->UploadPath . $this->file_other->Upload->DbValue;
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
 
             // udate
             $this->udate->LinkCustomAttributes = "";
@@ -2668,21 +2626,6 @@ class DocJuzmatch3Edit extends DocJuzmatch3
                 RenderUploadField($this->file_other);
             }
 
-            // attach_file
-            $this->attach_file->setupEditAttributes();
-            $this->attach_file->EditCustomAttributes = "";
-            if (!$this->attach_file->Raw) {
-                $this->attach_file->CurrentValue = HtmlDecode($this->attach_file->CurrentValue);
-            }
-            $this->attach_file->EditValue = HtmlEncode($this->attach_file->CurrentValue);
-            $this->attach_file->PlaceHolder = RemoveHtml($this->attach_file->caption());
-
-            // status
-            $this->status->setupEditAttributes();
-            $this->status->EditCustomAttributes = "";
-            $this->status->EditValue = $this->status->options(true);
-            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
-
             // udate
 
             // uuser
@@ -2884,14 +2827,6 @@ class DocJuzmatch3Edit extends DocJuzmatch3
             $this->file_other->LinkCustomAttributes = "";
             $this->file_other->HrefValue = "";
             $this->file_other->ExportHrefValue = $this->file_other->UploadPath . $this->file_other->Upload->DbValue;
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
 
             // udate
             $this->udate->LinkCustomAttributes = "";
@@ -3188,16 +3123,6 @@ class DocJuzmatch3Edit extends DocJuzmatch3
                 $this->file_other->addErrorMessage(str_replace("%s", $this->file_other->caption(), $this->file_other->RequiredErrorMessage));
             }
         }
-        if ($this->attach_file->Required) {
-            if (!$this->attach_file->IsDetailKey && EmptyValue($this->attach_file->FormValue)) {
-                $this->attach_file->addErrorMessage(str_replace("%s", $this->attach_file->caption(), $this->attach_file->RequiredErrorMessage));
-            }
-        }
-        if ($this->status->Required) {
-            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
-                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
-            }
-        }
         if ($this->udate->Required) {
             if (!$this->udate->IsDetailKey && EmptyValue($this->udate->FormValue)) {
                 $this->udate->addErrorMessage(str_replace("%s", $this->udate->caption(), $this->udate->RequiredErrorMessage));
@@ -3426,12 +3351,6 @@ class DocJuzmatch3Edit extends DocJuzmatch3
                     $rsnew['file_other'] = $this->file_other->Upload->FileName;
                 }
             }
-
-            // attach_file
-            $this->attach_file->setDbValueDef($rsnew, $this->attach_file->CurrentValue, null, $this->attach_file->ReadOnly);
-
-            // status
-            $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, $this->status->ReadOnly);
 
             // udate
             $this->udate->CurrentValue = CurrentDateTime();

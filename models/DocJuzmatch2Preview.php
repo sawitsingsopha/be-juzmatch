@@ -35,6 +35,14 @@ class DocJuzmatch2Preview extends DocJuzmatch2
     // Rendering View
     public $RenderingView = false;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -310,6 +318,8 @@ class DocJuzmatch2Preview extends DocJuzmatch2
 		        $this->file_idcard->UploadPath = $this->file_idcard->OldUploadPath;
 		        $this->file_house_regis->OldUploadPath = "/upload/";
 		        $this->file_house_regis->UploadPath = $this->file_house_regis->OldUploadPath;
+		        $this->file_loan->OldUploadPath = "/upload/";
+		        $this->file_loan->UploadPath = $this->file_loan->OldUploadPath;
 		        $this->file_other->OldUploadPath = "/upload/";
 		        $this->file_other->UploadPath = $this->file_other->OldUploadPath;
                 $row = $this->getRecordFromArray($rs->fields);
@@ -471,15 +481,15 @@ class DocJuzmatch2Preview extends DocJuzmatch2
         $this->company_seal_email->setVisibility();
         $this->file_idcard->Visible = false;
         $this->file_house_regis->Visible = false;
+        $this->file_loan->setVisibility();
         $this->file_other->Visible = false;
         $this->contact_address->setVisibility();
         $this->contact_address2->setVisibility();
         $this->contact_email->setVisibility();
         $this->contact_lineid->setVisibility();
         $this->contact_phone->setVisibility();
-        $this->file_loan->Visible = false;
-        $this->attach_file->setVisibility();
-        $this->status->setVisibility();
+        $this->attach_file->Visible = false;
+        $this->status->Visible = false;
         $this->doc_creden_id->Visible = false;
         $this->cdate->setVisibility();
         $this->cuser->Visible = false;
@@ -629,13 +639,13 @@ class DocJuzmatch2Preview extends DocJuzmatch2
             $this->company_seal_email->setSort("");
             $this->file_idcard->setSort("");
             $this->file_house_regis->setSort("");
+            $this->file_loan->setSort("");
             $this->file_other->setSort("");
             $this->contact_address->setSort("");
             $this->contact_address2->setSort("");
             $this->contact_email->setSort("");
             $this->contact_lineid->setSort("");
             $this->contact_phone->setSort("");
-            $this->file_loan->setSort("");
             $this->attach_file->setSort("");
             $this->status->setSort("");
             $this->doc_creden_id->setSort("");
@@ -698,13 +708,12 @@ class DocJuzmatch2Preview extends DocJuzmatch2
             $this->updateSort($this->juzmatch_authority2_email, $ctrl); // juzmatch_authority2_email
             $this->updateSort($this->company_seal_name, $ctrl); // company_seal_name
             $this->updateSort($this->company_seal_email, $ctrl); // company_seal_email
+            $this->updateSort($this->file_loan, $ctrl); // file_loan
             $this->updateSort($this->contact_address, $ctrl); // contact_address
             $this->updateSort($this->contact_address2, $ctrl); // contact_address2
             $this->updateSort($this->contact_email, $ctrl); // contact_email
             $this->updateSort($this->contact_lineid, $ctrl); // contact_lineid
             $this->updateSort($this->contact_phone, $ctrl); // contact_phone
-            $this->updateSort($this->attach_file, $ctrl); // attach_file
-            $this->updateSort($this->status, $ctrl); // status
             $this->updateSort($this->cdate, $ctrl); // cdate
         }
     }
@@ -756,18 +765,6 @@ class DocJuzmatch2Preview extends DocJuzmatch2
         $item->Visible = $Security->canEdit();
         $item->OnLeft = false;
 
-        // "copy"
-        $item = &$this->ListOptions->add("copy");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canAdd();
-        $item->OnLeft = false;
-
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
-        $item->OnLeft = false;
-
         // Drop down button for ListOptions
         $this->ListOptions->UseDropDownButton = false;
         $this->ListOptions->DropDownButtonPhrase = $Language->phrase("ButtonListOptions");
@@ -815,37 +812,6 @@ class DocJuzmatch2Preview extends DocJuzmatch2
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editTitle . "\" data-caption=\"" . $editTitle . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode($editUrl) . "\" data-btn=\"SaveBtn\">" . $editCaption . "</a>";
             } else {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . $editTitle . "\" data-caption=\"" . $editTitle . "\" href=\"" . HtmlEncode($editUrl) . "\">" . $editCaption . "</a>";
-            }
-        } else {
-            $opt->Body = "";
-        }
-
-        // "copy"
-        $opt = $this->ListOptions["copy"];
-        if ($Security->canAdd()) {
-            $copyCaption = $Language->phrase("CopyLink");
-            $copyTitle = HtmlTitle($copyCaption);
-            $copyUrl = $this->getCopyUrl($masterKeyUrl);
-            if ($this->UseModalLinks && !IsMobile()) {
-                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copyTitle . "\" data-caption=\"" . $copyTitle . "\" data-ew-action=\"modal\" data-url=\"" . HtmlEncode($copyUrl) . "\" data-btn=\"AddBtn\">" . $copyCaption . "</a>";
-            } else {
-                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copyTitle . "\" data-caption=\"" . $copyTitle . "\" href=\"" . HtmlEncode($copyUrl) . "\">" . $copyCaption . "</a>";
-            }
-        } else {
-            $opt->Body = "";
-        }
-
-        // "delete"
-        $opt = $this->ListOptions["delete"];
-        if ($Security->canDelete()) {
-            $deleteCaption = $Language->phrase("DeleteLink");
-            $deleteTitle = HtmlTitle($deleteCaption);
-            $deleteUrl = $this->getDeleteUrl();
-            if ($this->UseModalLinks && !IsMobile()) {
-                $deleteUrl .= (ContainsString($deleteUrl, "?") ? "&" : "?") . "action=1";
-                $opt->Body = "<a class=\"ew-row-link ew-delete\" data-ew-action=\"inline-delete\" title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode($deleteUrl) . "\">" . $deleteCaption . "</a>";
-            } else {
-                $opt->Body = "<a class=\"ew-row-link ew-delete\" data-ew-action=\"\" title=\"" . $deleteTitle . "\" data-caption=\"" . $deleteTitle . "\" href=\"" . HtmlEncode($deleteUrl) . "\">" . $deleteCaption . "</a>";
             }
         } else {
             $opt->Body = "";

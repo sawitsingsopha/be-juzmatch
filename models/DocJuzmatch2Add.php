@@ -35,6 +35,14 @@ class DocJuzmatch2Add extends DocJuzmatch2
     // Rendering View
     public $RenderingView = false;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -311,6 +319,8 @@ class DocJuzmatch2Add extends DocJuzmatch2
 		        $this->file_idcard->UploadPath = $this->file_idcard->OldUploadPath;
 		        $this->file_house_regis->OldUploadPath = "/upload/";
 		        $this->file_house_regis->UploadPath = $this->file_house_regis->OldUploadPath;
+		        $this->file_loan->OldUploadPath = "/upload/";
+		        $this->file_loan->UploadPath = $this->file_loan->OldUploadPath;
 		        $this->file_other->OldUploadPath = "/upload/";
 		        $this->file_other->UploadPath = $this->file_other->OldUploadPath;
                 $row = $this->getRecordFromArray($rs->fields);
@@ -541,15 +551,15 @@ class DocJuzmatch2Add extends DocJuzmatch2
         $this->company_seal_email->setVisibility();
         $this->file_idcard->setVisibility();
         $this->file_house_regis->setVisibility();
+        $this->file_loan->setVisibility();
         $this->file_other->setVisibility();
         $this->contact_address->setVisibility();
         $this->contact_address2->setVisibility();
         $this->contact_email->setVisibility();
         $this->contact_lineid->setVisibility();
         $this->contact_phone->setVisibility();
-        $this->file_loan->setVisibility();
-        $this->attach_file->setVisibility();
-        $this->status->setVisibility();
+        $this->attach_file->Visible = false;
+        $this->status->Visible = false;
         $this->doc_creden_id->Visible = false;
         $this->cdate->setVisibility();
         $this->cuser->setVisibility();
@@ -656,7 +666,7 @@ class DocJuzmatch2Add extends DocJuzmatch2
                     if ($this->getSuccessMessage() == "" && Post("addopt") != "1") { // Skip success message for addopt (done in JavaScript)
                         $this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up success message
                     }
-                    $returnUrl = $this->getReturnUrl();
+                    $returnUrl = $this->GetEditUrl();
                     if (GetPageName($returnUrl) == "docjuzmatch2list") {
                         $returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
                     } elseif (GetPageName($returnUrl) == "docjuzmatch2view") {
@@ -721,6 +731,9 @@ class DocJuzmatch2Add extends DocJuzmatch2
         $this->file_house_regis->Upload->Index = $CurrentForm->Index;
         $this->file_house_regis->Upload->uploadFile();
         $this->file_house_regis->CurrentValue = $this->file_house_regis->Upload->FileName;
+        $this->file_loan->Upload->Index = $CurrentForm->Index;
+        $this->file_loan->Upload->uploadFile();
+        $this->file_loan->CurrentValue = $this->file_loan->Upload->FileName;
         $this->file_other->Upload->Index = $CurrentForm->Index;
         $this->file_other->Upload->uploadFile();
         $this->file_other->CurrentValue = $this->file_other->Upload->FileName;
@@ -815,6 +828,9 @@ class DocJuzmatch2Add extends DocJuzmatch2
         $this->file_house_regis->Upload->DbValue = null;
         $this->file_house_regis->OldValue = $this->file_house_regis->Upload->DbValue;
         $this->file_house_regis->CurrentValue = null; // Clear file related field
+        $this->file_loan->Upload->DbValue = null;
+        $this->file_loan->OldValue = $this->file_loan->Upload->DbValue;
+        $this->file_loan->CurrentValue = null; // Clear file related field
         $this->file_other->Upload->DbValue = null;
         $this->file_other->OldValue = $this->file_other->Upload->DbValue;
         $this->file_other->CurrentValue = null; // Clear file related field
@@ -828,8 +844,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
         $this->contact_lineid->OldValue = $this->contact_lineid->CurrentValue;
         $this->contact_phone->CurrentValue = null;
         $this->contact_phone->OldValue = $this->contact_phone->CurrentValue;
-        $this->file_loan->CurrentValue = null;
-        $this->file_loan->OldValue = $this->file_loan->CurrentValue;
         $this->attach_file->CurrentValue = null;
         $this->attach_file->OldValue = $this->attach_file->CurrentValue;
         $this->status->CurrentValue = 0;
@@ -1317,36 +1331,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
             }
         }
 
-        // Check field name 'file_loan' first before field var 'x_file_loan'
-        $val = $CurrentForm->hasValue("file_loan") ? $CurrentForm->getValue("file_loan") : $CurrentForm->getValue("x_file_loan");
-        if (!$this->file_loan->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->file_loan->Visible = false; // Disable update for API request
-            } else {
-                $this->file_loan->setFormValue($val);
-            }
-        }
-
-        // Check field name 'attach_file' first before field var 'x_attach_file'
-        $val = $CurrentForm->hasValue("attach_file") ? $CurrentForm->getValue("attach_file") : $CurrentForm->getValue("x_attach_file");
-        if (!$this->attach_file->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->attach_file->Visible = false; // Disable update for API request
-            } else {
-                $this->attach_file->setFormValue($val);
-            }
-        }
-
-        // Check field name 'status' first before field var 'x_status'
-        $val = $CurrentForm->hasValue("status") ? $CurrentForm->getValue("status") : $CurrentForm->getValue("x_status");
-        if (!$this->status->IsDetailKey) {
-            if (IsApi() && $val === null) {
-                $this->status->Visible = false; // Disable update for API request
-            } else {
-                $this->status->setFormValue($val);
-            }
-        }
-
         // Check field name 'cdate' first before field var 'x_cdate'
         $val = $CurrentForm->hasValue("cdate") ? $CurrentForm->getValue("cdate") : $CurrentForm->getValue("x_cdate");
         if (!$this->cdate->IsDetailKey) {
@@ -1426,6 +1410,8 @@ class DocJuzmatch2Add extends DocJuzmatch2
 		$this->file_idcard->UploadPath = $this->file_idcard->OldUploadPath;
 		$this->file_house_regis->OldUploadPath = "/upload/";
 		$this->file_house_regis->UploadPath = $this->file_house_regis->OldUploadPath;
+		$this->file_loan->OldUploadPath = "/upload/";
+		$this->file_loan->UploadPath = $this->file_loan->OldUploadPath;
 		$this->file_other->OldUploadPath = "/upload/";
 		$this->file_other->UploadPath = $this->file_other->OldUploadPath;
         $this->getUploadFiles(); // Get upload files
@@ -1484,9 +1470,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
         $this->contact_email->CurrentValue = $this->contact_email->FormValue;
         $this->contact_lineid->CurrentValue = $this->contact_lineid->FormValue;
         $this->contact_phone->CurrentValue = $this->contact_phone->FormValue;
-        $this->file_loan->CurrentValue = $this->file_loan->FormValue;
-        $this->attach_file->CurrentValue = $this->attach_file->FormValue;
-        $this->status->CurrentValue = $this->status->FormValue;
         $this->cdate->CurrentValue = $this->cdate->FormValue;
         $this->cdate->CurrentValue = UnFormatDateTime($this->cdate->CurrentValue, $this->cdate->formatPattern());
         $this->cuser->CurrentValue = $this->cuser->FormValue;
@@ -1590,6 +1573,8 @@ class DocJuzmatch2Add extends DocJuzmatch2
         $this->file_idcard->setDbValue($this->file_idcard->Upload->DbValue);
         $this->file_house_regis->Upload->DbValue = $row['file_house_regis'];
         $this->file_house_regis->setDbValue($this->file_house_regis->Upload->DbValue);
+        $this->file_loan->Upload->DbValue = $row['file_loan'];
+        $this->file_loan->setDbValue($this->file_loan->Upload->DbValue);
         $this->file_other->Upload->DbValue = $row['file_other'];
         $this->file_other->setDbValue($this->file_other->Upload->DbValue);
         $this->contact_address->setDbValue($row['contact_address']);
@@ -1597,7 +1582,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
         $this->contact_email->setDbValue($row['contact_email']);
         $this->contact_lineid->setDbValue($row['contact_lineid']);
         $this->contact_phone->setDbValue($row['contact_phone']);
-        $this->file_loan->setDbValue($row['file_loan']);
         $this->attach_file->setDbValue($row['attach_file']);
         $this->status->setDbValue($row['status']);
         $this->doc_creden_id->setDbValue($row['doc_creden_id']);
@@ -1664,13 +1648,13 @@ class DocJuzmatch2Add extends DocJuzmatch2
         $row['company_seal_email'] = $this->company_seal_email->CurrentValue;
         $row['file_idcard'] = $this->file_idcard->Upload->DbValue;
         $row['file_house_regis'] = $this->file_house_regis->Upload->DbValue;
+        $row['file_loan'] = $this->file_loan->Upload->DbValue;
         $row['file_other'] = $this->file_other->Upload->DbValue;
         $row['contact_address'] = $this->contact_address->CurrentValue;
         $row['contact_address2'] = $this->contact_address2->CurrentValue;
         $row['contact_email'] = $this->contact_email->CurrentValue;
         $row['contact_lineid'] = $this->contact_lineid->CurrentValue;
         $row['contact_phone'] = $this->contact_phone->CurrentValue;
-        $row['file_loan'] = $this->file_loan->CurrentValue;
         $row['attach_file'] = $this->attach_file->CurrentValue;
         $row['status'] = $this->status->CurrentValue;
         $row['doc_creden_id'] = $this->doc_creden_id->CurrentValue;
@@ -1845,6 +1829,9 @@ class DocJuzmatch2Add extends DocJuzmatch2
         // file_house_regis
         $this->file_house_regis->RowCssClass = "row";
 
+        // file_loan
+        $this->file_loan->RowCssClass = "row";
+
         // file_other
         $this->file_other->RowCssClass = "row";
 
@@ -1862,9 +1849,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
 
         // contact_phone
         $this->contact_phone->RowCssClass = "row";
-
-        // file_loan
-        $this->file_loan->RowCssClass = "row";
 
         // attach_file
         $this->attach_file->RowCssClass = "row";
@@ -2108,6 +2092,15 @@ class DocJuzmatch2Add extends DocJuzmatch2
             }
             $this->file_house_regis->ViewCustomAttributes = "";
 
+            // file_loan
+            $this->file_loan->UploadPath = "/upload/";
+            if (!EmptyValue($this->file_loan->Upload->DbValue)) {
+                $this->file_loan->ViewValue = $this->file_loan->Upload->DbValue;
+            } else {
+                $this->file_loan->ViewValue = "";
+            }
+            $this->file_loan->ViewCustomAttributes = "";
+
             // file_other
             $this->file_other->UploadPath = "/upload/";
             if (!EmptyValue($this->file_other->Upload->DbValue)) {
@@ -2136,22 +2129,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
             // contact_phone
             $this->contact_phone->ViewValue = $this->contact_phone->CurrentValue;
             $this->contact_phone->ViewCustomAttributes = "";
-
-            // file_loan
-            $this->file_loan->ViewValue = $this->file_loan->CurrentValue;
-            $this->file_loan->ViewCustomAttributes = "";
-
-            // attach_file
-            $this->attach_file->ViewValue = $this->attach_file->CurrentValue;
-            $this->attach_file->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
 
             // cdate
             $this->cdate->ViewValue = $this->cdate->CurrentValue;
@@ -2352,6 +2329,11 @@ class DocJuzmatch2Add extends DocJuzmatch2
             $this->file_house_regis->HrefValue = "";
             $this->file_house_regis->ExportHrefValue = $this->file_house_regis->UploadPath . $this->file_house_regis->Upload->DbValue;
 
+            // file_loan
+            $this->file_loan->LinkCustomAttributes = "";
+            $this->file_loan->HrefValue = "";
+            $this->file_loan->ExportHrefValue = $this->file_loan->UploadPath . $this->file_loan->Upload->DbValue;
+
             // file_other
             $this->file_other->LinkCustomAttributes = "";
             $this->file_other->HrefValue = "";
@@ -2376,18 +2358,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
             // contact_phone
             $this->contact_phone->LinkCustomAttributes = "";
             $this->contact_phone->HrefValue = "";
-
-            // file_loan
-            $this->file_loan->LinkCustomAttributes = "";
-            $this->file_loan->HrefValue = "";
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
 
             // cdate
             $this->cdate->LinkCustomAttributes = "";
@@ -2781,6 +2751,22 @@ class DocJuzmatch2Add extends DocJuzmatch2
                 RenderUploadField($this->file_house_regis);
             }
 
+            // file_loan
+            $this->file_loan->setupEditAttributes();
+            $this->file_loan->EditCustomAttributes = "";
+            $this->file_loan->UploadPath = "/upload/";
+            if (!EmptyValue($this->file_loan->Upload->DbValue)) {
+                $this->file_loan->EditValue = $this->file_loan->Upload->DbValue;
+            } else {
+                $this->file_loan->EditValue = "";
+            }
+            if (!EmptyValue($this->file_loan->CurrentValue)) {
+                $this->file_loan->Upload->FileName = $this->file_loan->CurrentValue;
+            }
+            if ($this->isShow() || $this->isCopy()) {
+                RenderUploadField($this->file_loan);
+            }
+
             // file_other
             $this->file_other->setupEditAttributes();
             $this->file_other->EditCustomAttributes = "";
@@ -2841,30 +2827,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
             }
             $this->contact_phone->EditValue = HtmlEncode($this->contact_phone->CurrentValue);
             $this->contact_phone->PlaceHolder = RemoveHtml($this->contact_phone->caption());
-
-            // file_loan
-            $this->file_loan->setupEditAttributes();
-            $this->file_loan->EditCustomAttributes = "";
-            if (!$this->file_loan->Raw) {
-                $this->file_loan->CurrentValue = HtmlDecode($this->file_loan->CurrentValue);
-            }
-            $this->file_loan->EditValue = HtmlEncode($this->file_loan->CurrentValue);
-            $this->file_loan->PlaceHolder = RemoveHtml($this->file_loan->caption());
-
-            // attach_file
-            $this->attach_file->setupEditAttributes();
-            $this->attach_file->EditCustomAttributes = "";
-            if (!$this->attach_file->Raw) {
-                $this->attach_file->CurrentValue = HtmlDecode($this->attach_file->CurrentValue);
-            }
-            $this->attach_file->EditValue = HtmlEncode($this->attach_file->CurrentValue);
-            $this->attach_file->PlaceHolder = RemoveHtml($this->attach_file->caption());
-
-            // status
-            $this->status->setupEditAttributes();
-            $this->status->EditCustomAttributes = "";
-            $this->status->EditValue = $this->status->options(true);
-            $this->status->PlaceHolder = RemoveHtml($this->status->caption());
 
             // cdate
 
@@ -3048,6 +3010,11 @@ class DocJuzmatch2Add extends DocJuzmatch2
             $this->file_house_regis->HrefValue = "";
             $this->file_house_regis->ExportHrefValue = $this->file_house_regis->UploadPath . $this->file_house_regis->Upload->DbValue;
 
+            // file_loan
+            $this->file_loan->LinkCustomAttributes = "";
+            $this->file_loan->HrefValue = "";
+            $this->file_loan->ExportHrefValue = $this->file_loan->UploadPath . $this->file_loan->Upload->DbValue;
+
             // file_other
             $this->file_other->LinkCustomAttributes = "";
             $this->file_other->HrefValue = "";
@@ -3072,18 +3039,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
             // contact_phone
             $this->contact_phone->LinkCustomAttributes = "";
             $this->contact_phone->HrefValue = "";
-
-            // file_loan
-            $this->file_loan->LinkCustomAttributes = "";
-            $this->file_loan->HrefValue = "";
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
 
             // cdate
             $this->cdate->LinkCustomAttributes = "";
@@ -3380,6 +3335,11 @@ class DocJuzmatch2Add extends DocJuzmatch2
                 $this->file_house_regis->addErrorMessage(str_replace("%s", $this->file_house_regis->caption(), $this->file_house_regis->RequiredErrorMessage));
             }
         }
+        if ($this->file_loan->Required) {
+            if ($this->file_loan->Upload->FileName == "" && !$this->file_loan->Upload->KeepFile) {
+                $this->file_loan->addErrorMessage(str_replace("%s", $this->file_loan->caption(), $this->file_loan->RequiredErrorMessage));
+            }
+        }
         if ($this->file_other->Required) {
             if ($this->file_other->Upload->FileName == "" && !$this->file_other->Upload->KeepFile) {
                 $this->file_other->addErrorMessage(str_replace("%s", $this->file_other->caption(), $this->file_other->RequiredErrorMessage));
@@ -3408,21 +3368,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
         if ($this->contact_phone->Required) {
             if (!$this->contact_phone->IsDetailKey && EmptyValue($this->contact_phone->FormValue)) {
                 $this->contact_phone->addErrorMessage(str_replace("%s", $this->contact_phone->caption(), $this->contact_phone->RequiredErrorMessage));
-            }
-        }
-        if ($this->file_loan->Required) {
-            if (!$this->file_loan->IsDetailKey && EmptyValue($this->file_loan->FormValue)) {
-                $this->file_loan->addErrorMessage(str_replace("%s", $this->file_loan->caption(), $this->file_loan->RequiredErrorMessage));
-            }
-        }
-        if ($this->attach_file->Required) {
-            if (!$this->attach_file->IsDetailKey && EmptyValue($this->attach_file->FormValue)) {
-                $this->attach_file->addErrorMessage(str_replace("%s", $this->attach_file->caption(), $this->attach_file->RequiredErrorMessage));
-            }
-        }
-        if ($this->status->Required) {
-            if (!$this->status->IsDetailKey && EmptyValue($this->status->FormValue)) {
-                $this->status->addErrorMessage(str_replace("%s", $this->status->caption(), $this->status->RequiredErrorMessage));
             }
         }
         if ($this->cdate->Required) {
@@ -3486,6 +3431,8 @@ class DocJuzmatch2Add extends DocJuzmatch2
             $this->file_idcard->UploadPath = $this->file_idcard->OldUploadPath;
             $this->file_house_regis->OldUploadPath = "/upload/";
             $this->file_house_regis->UploadPath = $this->file_house_regis->OldUploadPath;
+            $this->file_loan->OldUploadPath = "/upload/";
+            $this->file_loan->UploadPath = $this->file_loan->OldUploadPath;
             $this->file_other->OldUploadPath = "/upload/";
             $this->file_other->UploadPath = $this->file_other->OldUploadPath;
         }
@@ -3629,6 +3576,16 @@ class DocJuzmatch2Add extends DocJuzmatch2
             }
         }
 
+        // file_loan
+        if ($this->file_loan->Visible && !$this->file_loan->Upload->KeepFile) {
+            $this->file_loan->Upload->DbValue = ""; // No need to delete old file
+            if ($this->file_loan->Upload->FileName == "") {
+                $rsnew['file_loan'] = null;
+            } else {
+                $rsnew['file_loan'] = $this->file_loan->Upload->FileName;
+            }
+        }
+
         // file_other
         if ($this->file_other->Visible && !$this->file_other->Upload->KeepFile) {
             $this->file_other->Upload->DbValue = ""; // No need to delete old file
@@ -3653,15 +3610,6 @@ class DocJuzmatch2Add extends DocJuzmatch2
 
         // contact_phone
         $this->contact_phone->setDbValueDef($rsnew, $this->contact_phone->CurrentValue, null, false);
-
-        // file_loan
-        $this->file_loan->setDbValueDef($rsnew, $this->file_loan->CurrentValue, null, false);
-
-        // attach_file
-        $this->attach_file->setDbValueDef($rsnew, $this->attach_file->CurrentValue, null, false);
-
-        // status
-        $this->status->setDbValueDef($rsnew, $this->status->CurrentValue, null, false);
 
         // cdate
         $this->cdate->CurrentValue = CurrentDateTime();
@@ -3779,6 +3727,48 @@ class DocJuzmatch2Add extends DocJuzmatch2
                 $this->file_house_regis->setDbValueDef($rsnew, $this->file_house_regis->Upload->FileName, null, false);
             }
         }
+        if ($this->file_loan->Visible && !$this->file_loan->Upload->KeepFile) {
+            $this->file_loan->UploadPath = "/upload/";
+            $oldFiles = EmptyValue($this->file_loan->Upload->DbValue) ? [] : [$this->file_loan->htmlDecode($this->file_loan->Upload->DbValue)];
+            if (!EmptyValue($this->file_loan->Upload->FileName)) {
+                $newFiles = [$this->file_loan->Upload->FileName];
+                $NewFileCount = count($newFiles);
+                for ($i = 0; $i < $NewFileCount; $i++) {
+                    if ($newFiles[$i] != "") {
+                        $file = $newFiles[$i];
+                        $tempPath = UploadTempPath($this->file_loan, $this->file_loan->Upload->Index);
+                        if (file_exists($tempPath . $file)) {
+                            if (Config("DELETE_UPLOADED_FILES")) {
+                                $oldFileFound = false;
+                                $oldFileCount = count($oldFiles);
+                                for ($j = 0; $j < $oldFileCount; $j++) {
+                                    $oldFile = $oldFiles[$j];
+                                    if ($oldFile == $file) { // Old file found, no need to delete anymore
+                                        array_splice($oldFiles, $j, 1);
+                                        $oldFileFound = true;
+                                        break;
+                                    }
+                                }
+                                if ($oldFileFound) { // No need to check if file exists further
+                                    continue;
+                                }
+                            }
+                            $file1 = UniqueFilename($this->file_loan->physicalUploadPath(), $file); // Get new file name
+                            if ($file1 != $file) { // Rename temp file
+                                while (file_exists($tempPath . $file1) || file_exists($this->file_loan->physicalUploadPath() . $file1)) { // Make sure no file name clash
+                                    $file1 = UniqueFilename([$this->file_loan->physicalUploadPath(), $tempPath], $file1, true); // Use indexed name
+                                }
+                                rename($tempPath . $file, $tempPath . $file1);
+                                $newFiles[$i] = $file1;
+                            }
+                        }
+                    }
+                }
+                $this->file_loan->Upload->DbValue = empty($oldFiles) ? "" : implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $oldFiles);
+                $this->file_loan->Upload->FileName = implode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $newFiles);
+                $this->file_loan->setDbValueDef($rsnew, $this->file_loan->Upload->FileName, null, false);
+            }
+        }
         if ($this->file_other->Visible && !$this->file_other->Upload->KeepFile) {
             $this->file_other->UploadPath = "/upload/";
             $oldFiles = EmptyValue($this->file_other->Upload->DbValue) ? [] : [$this->file_other->htmlDecode($this->file_other->Upload->DbValue)];
@@ -3889,6 +3879,37 @@ class DocJuzmatch2Add extends DocJuzmatch2
                         }
                     }
                 }
+                if ($this->file_loan->Visible && !$this->file_loan->Upload->KeepFile) {
+                    $oldFiles = EmptyValue($this->file_loan->Upload->DbValue) ? [] : [$this->file_loan->htmlDecode($this->file_loan->Upload->DbValue)];
+                    if (!EmptyValue($this->file_loan->Upload->FileName)) {
+                        $newFiles = [$this->file_loan->Upload->FileName];
+                        $newFiles2 = [$this->file_loan->htmlDecode($rsnew['file_loan'])];
+                        $newFileCount = count($newFiles);
+                        for ($i = 0; $i < $newFileCount; $i++) {
+                            if ($newFiles[$i] != "") {
+                                $file = UploadTempPath($this->file_loan, $this->file_loan->Upload->Index) . $newFiles[$i];
+                                if (file_exists($file)) {
+                                    if (@$newFiles2[$i] != "") { // Use correct file name
+                                        $newFiles[$i] = $newFiles2[$i];
+                                    }
+                                    if (!$this->file_loan->Upload->SaveToFile($newFiles[$i], true, $i)) { // Just replace
+                                        $this->setFailureMessage($Language->phrase("UploadErrMsg7"));
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        $newFiles = [];
+                    }
+                    if (Config("DELETE_UPLOADED_FILES")) {
+                        foreach ($oldFiles as $oldFile) {
+                            if ($oldFile != "" && !in_array($oldFile, $newFiles)) {
+                                @unlink($this->file_loan->oldPhysicalUploadPath() . $oldFile);
+                            }
+                        }
+                    }
+                }
                 if ($this->file_other->Visible && !$this->file_other->Upload->KeepFile) {
                     $oldFiles = EmptyValue($this->file_other->Upload->DbValue) ? [] : [$this->file_other->htmlDecode($this->file_other->Upload->DbValue)];
                     if (!EmptyValue($this->file_other->Upload->FileName)) {
@@ -3944,6 +3965,9 @@ class DocJuzmatch2Add extends DocJuzmatch2
 
             // file_house_regis
             CleanUploadTempPath($this->file_house_regis, $this->file_house_regis->Upload->Index);
+
+            // file_loan
+            CleanUploadTempPath($this->file_loan, $this->file_loan->Upload->Index);
 
             // file_other
             CleanUploadTempPath($this->file_other, $this->file_other->Upload->Index);

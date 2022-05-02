@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ew-language version="18.2.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/4/27">
+<ew-language version="18.2.0" id="en-US" name="English (US)" desc="English (US)" author="e.World Technology Limited" date="2022/4/28">
   <!--
     IMPORTANT NOTES:
     1. Language ID must be RFC 4646 language tags (which use hyphen, not underscore), e.g. en-US, fr-CA, fr-FR,
@@ -984,13 +984,13 @@
       <phrase id="menutext" value="doc creden signer" />
     </menu>
     <menu id="257">
-      <phrase id="menutext" value="สัญญา 1" />
+      <phrase id="menutext" value="สัญญาบริการจัดหาทรัพย์สิน" />
     </menu>
     <menu id="258">
-      <phrase id="menutext" value="สัญญา 2" />
+      <phrase id="menutext" value="สัญญาแต่งตั้งตัวแทนบริหารจัดหาทรัพย์สิน" />
     </menu>
     <menu id="259">
-      <phrase id="menutext" value="สัญญา 3" />
+      <phrase id="menutext" value="สัญญาเช่าทรัพย์สิน" />
     </menu>
     <menu id="261">
       <phrase id="menutext" value="mpay req log" />
@@ -3354,6 +3354,9 @@
       <field id="amount_cust_fee">
         <phrase id="fldcaption" value="amount cust fee" />
       </field>
+      <field id="count_show_signer_3">
+        <phrase id="fldcaption" value="count show signer 3" />
+      </field>
     </table>
     <table id="buyer_booking_asset">
       <phrase id="tblcaption" value="Buyer จองสินทรัพย์" />
@@ -3462,6 +3465,9 @@
       </field>
       <field id="amount_cust_fee">
         <phrase id="fldcaption" value="amount cust fee" />
+      </field>
+      <field id="count_show_signer_3">
+        <phrase id="fldcaption" value="count show signer 3" />
       </field>
     </table>
     <table id="buyer_config_asset_schedule">
@@ -6768,6 +6774,9 @@
       <field id="amount_cust_fee">
         <phrase id="fldcaption" value="amount cust fee" />
       </field>
+      <field id="count_show_signer_3">
+        <phrase id="fldcaption" value="count show signer 3" />
+      </field>
     </table>
     <table id="invertor_all_booking">
       <phrase id="tblcaption" value="สินทรัพย์ที่ Investor จอง" />
@@ -8653,7 +8662,7 @@
       </field>
     </table>
     <table id="doc_juzmatch1">
-      <phrase id="tblcaption" value="สัญญา 1" />
+      <phrase id="tblcaption" value="สัญญาบริการจัดหาทรัพย์สิน" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -8815,7 +8824,7 @@
       </field>
     </table>
     <table id="doc_juzmatch2">
-      <phrase id="tblcaption" value="สัญญา 2" />
+      <phrase id="tblcaption" value="สัญญาแต่งตั้งตัวแทนบริหารจัดหาทรัพย์สิน" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
@@ -8942,6 +8951,9 @@
       <field id="file_house_regis">
         <phrase id="fldcaption" value="File สำเนาทะเบียนบ้าน" />
       </field>
+      <field id="file_loan">
+        <phrase id="fldcaption" value="File สัญญากู้สินเชื่อ (หน้าที่เห็นวันที่กู้ และ หน้าที่เห็นวงเงิน)" />
+      </field>
       <field id="file_other">
         <phrase id="fldcaption" value="File เอกสารแนบอื่นๆ" />
       </field>
@@ -8960,11 +8972,8 @@
       <field id="contact_phone">
         <phrase id="fldcaption" value="เบอร์โทร" />
       </field>
-      <field id="file_loan">
-        <phrase id="fldcaption" value="file loan" />
-      </field>
       <field id="attach_file">
-        <phrase id="fldcaption" value="File สัญญา" />
+        <phrase id="fldcaption" value="attach file" />
       </field>
       <field id="status">
         <phrase id="fldcaption" value="สถานะสัญญา" />
@@ -9022,7 +9031,7 @@
       </field>
     </table>
     <table id="doc_juzmatch3">
-      <phrase id="tblcaption" value="สัญญา 3" />
+      <phrase id="tblcaption" value="สัญญาเช่าทรัพย์สิน" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>

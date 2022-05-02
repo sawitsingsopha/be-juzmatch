@@ -1233,6 +1233,7 @@ class DocJuzmatch3 extends DbTable
             'TEXT'
         );
         $this->attach_file->InputTextType = "text";
+        $this->attach_file->Sortable = false; // Allow sort
         $this->Fields['attach_file'] = &$this->attach_file;
 
         // status
@@ -1255,6 +1256,7 @@ class DocJuzmatch3 extends DbTable
             'SELECT'
         );
         $this->status->InputTextType = "text";
+        $this->status->Sortable = false; // Allow sort
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->Lookup = new Lookup('status', 'doc_juzmatch3', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
@@ -2685,8 +2687,10 @@ class DocJuzmatch3 extends DbTable
         // file_other
 
         // attach_file
+        $this->attach_file->CellCssStyle = "white-space: nowrap;";
 
         // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // doc_creden_id
         $this->doc_creden_id->CellCssStyle = "white-space: nowrap;";
@@ -3937,8 +3941,6 @@ class DocJuzmatch3 extends DbTable
                     $doc->exportCaption($this->file_house_regis);
                     $doc->exportCaption($this->file_titledeed);
                     $doc->exportCaption($this->file_other);
-                    $doc->exportCaption($this->attach_file);
-                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->cdate);
                 } else {
                     $doc->exportCaption($this->document_date);
@@ -3979,8 +3981,6 @@ class DocJuzmatch3 extends DbTable
                     $doc->exportCaption($this->contact_email);
                     $doc->exportCaption($this->contact_lineid);
                     $doc->exportCaption($this->contact_phone);
-                    $doc->exportCaption($this->attach_file);
-                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->cdate);
                     $doc->exportCaption($this->cuser);
                     $doc->exportCaption($this->cip);
@@ -4063,8 +4063,6 @@ class DocJuzmatch3 extends DbTable
                         $doc->exportField($this->file_house_regis);
                         $doc->exportField($this->file_titledeed);
                         $doc->exportField($this->file_other);
-                        $doc->exportField($this->attach_file);
-                        $doc->exportField($this->status);
                         $doc->exportField($this->cdate);
                     } else {
                         $doc->exportField($this->document_date);
@@ -4105,8 +4103,6 @@ class DocJuzmatch3 extends DbTable
                         $doc->exportField($this->contact_email);
                         $doc->exportField($this->contact_lineid);
                         $doc->exportField($this->contact_phone);
-                        $doc->exportField($this->attach_file);
-                        $doc->exportField($this->status);
                         $doc->exportField($this->cdate);
                         $doc->exportField($this->cuser);
                         $doc->exportField($this->cip);

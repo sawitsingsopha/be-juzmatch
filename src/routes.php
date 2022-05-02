@@ -1502,7 +1502,6 @@ return function (App $app) {
     $app->map(["GET","POST","OPTIONS"], '/docjuzmatch2add[/{id}]', DocJuzmatch2Controller::class . ':add')->add(PermissionMiddleware::class)->setName('docjuzmatch2add-doc_juzmatch2-add'); // add
     $app->map(["GET","OPTIONS"], '/docjuzmatch2view[/{id}]', DocJuzmatch2Controller::class . ':view')->add(PermissionMiddleware::class)->setName('docjuzmatch2view-doc_juzmatch2-view'); // view
     $app->map(["GET","POST","OPTIONS"], '/docjuzmatch2edit[/{id}]', DocJuzmatch2Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('docjuzmatch2edit-doc_juzmatch2-edit'); // edit
-    $app->map(["GET","POST","OPTIONS"], '/docjuzmatch2delete[/{id}]', DocJuzmatch2Controller::class . ':delete')->add(PermissionMiddleware::class)->setName('docjuzmatch2delete-doc_juzmatch2-delete'); // delete
     $app->map(["GET","OPTIONS"], '/docjuzmatch2preview', DocJuzmatch2Controller::class . ':preview')->add(PermissionMiddleware::class)->setName('docjuzmatch2preview-doc_juzmatch2-preview'); // preview
     $app->group(
         '/doc_juzmatch2',
@@ -1511,7 +1510,6 @@ return function (App $app) {
             $group->map(["GET","POST","OPTIONS"], '/' . Config("ADD_ACTION") . '[/{id}]', DocJuzmatch2Controller::class . ':add')->add(PermissionMiddleware::class)->setName('doc_juzmatch2/add-doc_juzmatch2-add-2'); // add
             $group->map(["GET","OPTIONS"], '/' . Config("VIEW_ACTION") . '[/{id}]', DocJuzmatch2Controller::class . ':view')->add(PermissionMiddleware::class)->setName('doc_juzmatch2/view-doc_juzmatch2-view-2'); // view
             $group->map(["GET","POST","OPTIONS"], '/' . Config("EDIT_ACTION") . '[/{id}]', DocJuzmatch2Controller::class . ':edit')->add(PermissionMiddleware::class)->setName('doc_juzmatch2/edit-doc_juzmatch2-edit-2'); // edit
-            $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{id}]', DocJuzmatch2Controller::class . ':delete')->add(PermissionMiddleware::class)->setName('doc_juzmatch2/delete-doc_juzmatch2-delete-2'); // delete
             $group->map(["GET","OPTIONS"], '/' . Config("PREVIEW_ACTION") . '', DocJuzmatch2Controller::class . ':preview')->add(PermissionMiddleware::class)->setName('doc_juzmatch2/preview-doc_juzmatch2-preview-2'); // preview
         }
     );
@@ -1581,6 +1579,9 @@ return function (App $app) {
             $group->map(["GET","POST","OPTIONS"], '/' . Config("DELETE_ACTION") . '[/{reason_id}]', ReasonTerminateContractController::class . ':delete')->add(PermissionMiddleware::class)->setName('reason_terminate_contract/delete-reason_terminate_contract-delete-2'); // delete
         }
     );
+
+    // downloadFileFromCloud
+    $app->map(["GET", "POST", "OPTIONS"], '/downloadfilefromcloud/downloadfilefromcloud[/{params:.*}]', DownloadFileFromCloudController::class)->add(PermissionMiddleware::class)->setName('downloadfilefromcloud/downloadfilefromcloud-downloadFileFromCloud-custom'); // custom
 
     // error
     $app->map(["GET","POST","OPTIONS"], '/error', OthersController::class . ':error')->add(PermissionMiddleware::class)->setName('error');

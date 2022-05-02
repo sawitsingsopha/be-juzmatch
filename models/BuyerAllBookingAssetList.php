@@ -681,6 +681,7 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
         $this->authorize_url->Visible = false;
         $this->amount_net->Visible = false;
         $this->amount_cust_fee->Visible = false;
+        $this->count_show_signer_3->Visible = false;
         $this->hideFieldsForAddEdit();
 
         // Set lookup cache
@@ -1534,6 +1535,7 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
                 $this->authorize_url->setSort("");
                 $this->amount_net->setSort("");
                 $this->amount_cust_fee->setSort("");
+                $this->count_show_signer_3->setSort("");
             }
 
             // Reset start position
@@ -1807,7 +1809,6 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
         $opt = $this->ListOptions["detail_doc_juzmatch1"];
         if ($Security->allowList(CurrentProjectID() . 'doc_juzmatch1')) {
             $body = $Language->phrase("DetailLink") . $Language->TablePhrase("doc_juzmatch1", "TblCaption");
-
             // old
             // $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch1list?" . Config("TABLE_SHOW_MASTER") . "=buyer_all_booking_asset&" . GetForeignKeyUrl("fk_buyer_booking_asset_id", $this->buyer_booking_asset_id->CurrentValue) . "") . "\">" . $body . "</a>";
             // docjuzmatch1list?showmaster=buyer_all_booking_asset&fk_buyer_booking_asset_id=2
@@ -1847,8 +1848,6 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
                     $body = "";   
                 }
             }
-
-
             $links = "";
             $detailPage = Container("DocJuzmatch1Grid");
             if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'buyer_all_booking_asset')) {
@@ -1884,8 +1883,6 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
         $opt = $this->ListOptions["detail_doc_juzmatch3"];
         if ($Security->allowList(CurrentProjectID() . 'doc_juzmatch3')) {
             $body = $Language->phrase("DetailLink") . $Language->TablePhrase("doc_juzmatch3", "TblCaption");
-
-
             // old
             // $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch3list?" . Config("TABLE_SHOW_MASTER") . "=buyer_all_booking_asset&" . GetForeignKeyUrl("fk_buyer_booking_asset_id", $this->buyer_booking_asset_id->CurrentValue) . "") . "\">" . $body . "</a>";
 
@@ -1893,14 +1890,27 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
             if ($this->buyer_booking_asset_id->CurrentValue == "" || $this->buyer_booking_asset_id->CurrentValue == null) {
             } else {
 
-                // check จ่ายเงินดาวน์งวดแรก
-                // $sql_check_down1 = "SELECT buyer_booking_asset.buyer_booking_asset_id,buyer_asset_rent.asset_id,buyer_asset_rent.status_pay_half_price_1 FROM `buyer_asset_rent` LEFT JOIN buyer_booking_asset ON buyer_booking_asset.asset_id = buyer_asset_rent.asset_id WHERE buyer_booking_asset.buyer_booking_asset_id = ".$this->buyer_booking_asset_id->CurrentValue." ORDER BY buyer_asset_rent.buyer_asset_rent_id DESC LIMIT 0,1";
-                // $res_check_down1 = ExecuteRow($sql_check_down1);
+                // check สัญญา 1 สำเร็จ
+                $sql_count_show_signer_3 = "SELECT count_show_signer_3 FROM `buyer_booking_asset` WHERE buyer_booking_asset_id = ".$this->buyer_booking_asset_id->CurrentValue;
+                $res_count_show_signer_3 = ExecuteRow($sql_count_show_signer_3);
 
-                // if (!empty($res_check_down1)) {
+                if (!empty($res_count_show_signer_3)) {
+                    $show_signer_3 = $res_count_show_signer_3['count_show_signer_3'];
 
-                    // $check_down1 = $res_check_down1['status_pay_half_price_1'];
-                    // if ($check_down1 == 2) {
+                    $count_email_signer_3 = -1;
+                    if ($docjuzmatch1Id == "") {
+                        $count_email_signer_3 = -1;
+                    }else{
+
+                    $sql_count_email_signer_3 = "SELECT COUNT(*) AS count FROM ( SELECT doc_juzmatch1.id,doc_creden_signer.doc_creden_id,COUNT(doc_creden_signer.doc_creden_signer_email) as count_signer_email FROM `doc_juzmatch1` LEFT JOIN doc_creden ON doc_creden.doc_creden_id = doc_juzmatch1.doc_creden_id LEFT JOIN doc_creden_signer ON doc_creden.doc_creden_id = doc_creden_signer.doc_creden_id WHERE doc_juzmatch1.id = ".$docjuzmatch1Id." AND doc_juzmatch1.doc_creden_id is NOT NULL GROUP BY doc_creden_signer.doc_creden_signer_email) as tem";
+                        $res_count_email_signer_3 = ExecuteRow($sql_count_email_signer_3);
+                        $count_email_signer_3 = $res_count_email_signer_3['count'];
+                        if($count_email_signer_3 <= 0){
+                            $count_email_signer_3 = -1; 
+                        }
+                    }
+                    // echo $count_email_signer_3;
+                    if ($show_signer_3 == $count_email_signer_3) {
                         // check prefix_asset_code
                         $docjuzmatch3Id = '';
                         $sql_check_doc3 = "SELECT id FROM `doc_juzmatch3` WHERE buyer_booking_asset_id = ".$this->buyer_booking_asset_id->CurrentValue;
@@ -1917,15 +1927,13 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
                             $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch3add?" . Config("TABLE_SHOW_MASTER") . "=buyer_all_booking_asset&" . GetForeignKeyUrl("fk_buyer_booking_asset_id", $this->buyer_booking_asset_id->CurrentValue) . "") . "\">" . $body . "</a>";
                             // /docjuzmatch1add?showmaster=buyer_all_booking_asset&fk_buyer_booking_asset_id=2
                         }
-                    // }else{
-                        // $body = "";   
-                    // }
-                // } else {
-                //     $body = "";   
-                // }
+                    }else{
+                        $body = "";   
+                    }
+                } else {
+                    $body = "";   
+                }
             }
-
-
             $links = "";
             $detailPage = Container("DocJuzmatch3Grid");
             if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'buyer_all_booking_asset')) {
@@ -2444,6 +2452,7 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
         $this->authorize_url->setDbValue($row['authorize_url']);
         $this->amount_net->setDbValue($row['amount_net']);
         $this->amount_cust_fee->setDbValue($row['amount_cust_fee']);
+        $this->count_show_signer_3->setDbValue($row['count_show_signer_3']);
     }
 
     // Return a row with default values
@@ -2482,6 +2491,7 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
         $row['authorize_url'] = null;
         $row['amount_net'] = null;
         $row['amount_cust_fee'] = null;
+        $row['count_show_signer_3'] = null;
         return $row;
     }
 
@@ -2604,6 +2614,9 @@ class BuyerAllBookingAssetList extends BuyerAllBookingAsset
 
         // amount_cust_fee
         $this->amount_cust_fee->CellCssStyle = "white-space: nowrap;";
+
+        // count_show_signer_3
+        $this->count_show_signer_3->CellCssStyle = "white-space: nowrap;";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {

@@ -1706,11 +1706,53 @@ class InvertorAllBookingList extends InvertorAllBooking
             }
         }
 
-        // "detail_doc_juzmatch2"
         $opt = $this->ListOptions["detail_doc_juzmatch2"];
         if ($Security->allowList(CurrentProjectID() . 'doc_juzmatch2')) {
             $body = $Language->phrase("DetailLink") . $Language->TablePhrase("doc_juzmatch2", "TblCaption");
-            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch2list?" . Config("TABLE_SHOW_MASTER") . "=invertor_all_booking&" . GetForeignKeyUrl("fk_invertor_booking_id", $this->invertor_booking_id->CurrentValue) . "") . "\">" . $body . "</a>";
+
+
+            // old
+            // $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch2list?" . Config("TABLE_SHOW_MASTER") . "=invertor_all_booking&" . GetForeignKeyUrl("fk_invertor_booking_id", $this->invertor_booking_id->CurrentValue) . "") . "\">" . $body . "</a>";
+
+            if ($this->invertor_booking_id->CurrentValue == "" || $this->invertor_booking_id->CurrentValue == null) {
+            } else {
+
+                // check Investor จ่ายเงินจอง
+                $sql_check_booking = "SELECT invertor_booking.payment_status FROM `invertor_booking` WHERE invertor_booking.invertor_booking_id = ".$this->invertor_booking_id->CurrentValue." ORDER BY invertor_booking.invertor_booking_id DESC LIMIT 0,1";
+                $res_check_booking= ExecuteRow($sql_check_booking);
+
+                if (!empty($res_check_booking)) {
+                    $check_booking_status = $res_check_booking['payment_status'];
+
+                    if ($check_booking_status == 1) {
+                        // new
+                        // check prefix_asset_code
+                        $docjuzmatch2Id = '';
+                        $sql_check_doc2 = "SELECT id FROM `doc_juzmatch2` WHERE investor_booking_id = ".$this->invertor_booking_id->CurrentValue;
+                        $res_check_doc2 = ExecuteRow($sql_check_doc2);
+
+                        $docjuzmatch2Id = $res_check_doc2['id'];
+
+                        if (!empty($res_check_doc2)) {
+                            // Edit
+                            // $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch2edit/".$docjuzmatch2Id."?" . Config("TABLE_SHOW_MASTER") . "=buyer_all_booking_asset&" . GetForeignKeyUrl("fk_buyer_booking_asset_id", $this->buyer_booking_asset_id->CurrentValue) . "") . "\">" . $body . "</a>";
+                            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch2edit/". $docjuzmatch2Id . "?" . Config("TABLE_SHOW_MASTER") . "=invertor_all_booking&" . GetForeignKeyUrl("fk_invertor_booking_id", $this->invertor_booking_id->CurrentValue) . "") . "\">" . $body . "</a>";
+                        // /docjuzmatch1edit/1?showmaster=buyer_all_booking_asset&fk_buyer_booking_asset_id=2
+                        } else {
+                            // Add
+                            // $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch2add?" . Config("TABLE_SHOW_MASTER") . "=buyer_all_booking_asset&" . GetForeignKeyUrl("fk_buyer_booking_asset_id", $this->buyer_booking_asset_id->CurrentValue) . "") . "\">" . $body . "</a>";
+                            $body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("docjuzmatch2add?" . Config("TABLE_SHOW_MASTER") . "=invertor_all_booking&" . GetForeignKeyUrl("fk_invertor_booking_id", $this->invertor_booking_id->CurrentValue) . "") . "\">" . $body . "</a>";
+                            // /docjuzmatch1add?showmaster=buyer_all_booking_asset&fk_buyer_booking_asset_id=2
+                        }
+                    } else {
+                        $body = "";
+                    }
+                } else {
+                    $body = "";
+                }
+                
+            }
+
             $links = "";
             $detailPage = Container("DocJuzmatch2Grid");
             if ($detailPage->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 'invertor_all_booking')) {

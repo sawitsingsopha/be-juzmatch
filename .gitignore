@@ -1,0 +1,5 @@
+/vendor
+/old_vendor
+/upload
+
+compose.lock

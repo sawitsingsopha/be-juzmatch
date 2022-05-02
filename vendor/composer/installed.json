@@ -31,12 +31,12 @@
         },
         "installation-source": "dist",
         "autoload": {
-            "files": [
-                "YaLinqo/Linq.php"
-            ],
             "psr-4": {
                 "YaLinqo\\": "YaLinqo/"
-            }
+            },
+            "files": [
+                "YaLinqo/Linq.php"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -1174,17 +1174,17 @@
     },
     {
         "name": "google/cloud-core",
-        "version": "v1.44.2",
-        "version_normalized": "1.44.2.0",
+        "version": "v1.44.3",
+        "version_normalized": "1.44.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/googleapis/google-cloud-php-core.git",
-            "reference": "d495545a53479297b440bee499daad50137fd55e"
+            "reference": "eac417a907beaa3bc2783a17b90c0113b7aa86e6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/d495545a53479297b440bee499daad50137fd55e",
-            "reference": "d495545a53479297b440bee499daad50137fd55e",
+            "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/eac417a907beaa3bc2783a17b90c0113b7aa86e6",
+            "reference": "eac417a907beaa3bc2783a17b90c0113b7aa86e6",
             "shasum": ""
         },
         "require": {
@@ -1210,7 +1210,7 @@
             "opis/closure": "May be used to serialize closures to process jobs in the batch daemon. Please require version ^3.",
             "symfony/lock": "Required for the Spanner cached based session pool. Please require the following commit: 3.3.x-dev#1ba6ac9"
         },
-        "time": "2022-04-20T18:34:50+00:00",
+        "time": "2022-04-27T23:24:15+00:00",
         "bin": [
             "bin/google-cloud-batch"
         ],
@@ -1235,22 +1235,22 @@
         ],
         "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
         "support": {
-            "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.44.2"
+            "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.44.3"
         }
     },
     {
         "name": "google/cloud-storage",
-        "version": "v1.26.2",
-        "version_normalized": "1.26.2.0",
+        "version": "v1.26.3",
+        "version_normalized": "1.26.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-            "reference": "a515dc6f80bee00ded6364626953b3b8de15c303"
+            "reference": "1c9cfee8a51605faa93cf2b011a848bd94d50f48"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/a515dc6f80bee00ded6364626953b3b8de15c303",
-            "reference": "a515dc6f80bee00ded6364626953b3b8de15c303",
+            "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/1c9cfee8a51605faa93cf2b011a848bd94d50f48",
+            "reference": "1c9cfee8a51605faa93cf2b011a848bd94d50f48",
             "shasum": ""
         },
         "require": {
@@ -1269,7 +1269,7 @@
             "google/cloud-pubsub": "May be used to register a topic to receive bucket notifications.",
             "phpseclib/phpseclib": "May be used in place of OpenSSL for creating signed Cloud Storage URLs. Please require version ^2."
         },
-        "time": "2022-04-20T18:34:50+00:00",
+        "time": "2022-04-27T23:24:15+00:00",
         "type": "library",
         "extra": {
             "component": {
@@ -1291,7 +1291,7 @@
         ],
         "description": "Cloud Storage Client for PHP",
         "support": {
-            "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.26.2"
+            "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.26.3"
         }
     },
     {
@@ -1963,8 +1963,8 @@
     },
     {
         "name": "illuminate/collections",
-        "version": "v8.83.9",
-        "version_normalized": "8.83.9.0",
+        "version": "v8.83.10",
+        "version_normalized": "8.83.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/collections.git",
@@ -2019,8 +2019,8 @@
     },
     {
         "name": "illuminate/config",
-        "version": "v8.83.9",
-        "version_normalized": "8.83.9.0",
+        "version": "v8.83.10",
+        "version_normalized": "8.83.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/config.git",
@@ -2069,8 +2069,8 @@
     },
     {
         "name": "illuminate/container",
-        "version": "v8.83.9",
-        "version_normalized": "8.83.9.0",
+        "version": "v8.83.10",
+        "version_normalized": "8.83.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/container.git",
@@ -2122,8 +2122,8 @@
     },
     {
         "name": "illuminate/contracts",
-        "version": "v8.83.9",
-        "version_normalized": "8.83.9.0",
+        "version": "v8.83.10",
+        "version_normalized": "8.83.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/contracts.git",
@@ -2172,8 +2172,8 @@
     },
     {
         "name": "illuminate/macroable",
-        "version": "v8.83.9",
-        "version_normalized": "8.83.9.0",
+        "version": "v8.83.10",
+        "version_normalized": "8.83.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/macroable.git",
@@ -2220,8 +2220,8 @@
     },
     {
         "name": "illuminate/support",
-        "version": "v8.83.9",
-        "version_normalized": "8.83.9.0",
+        "version": "v8.83.10",
+        "version_normalized": "8.83.10.0",
         "source": {
             "type": "git",
             "url": "https://github.com/illuminate/support.git",
@@ -2993,12 +2993,12 @@
         "type": "library",
         "installation-source": "dist",
         "autoload": {
-            "files": [
-                "src/functions.php"
-            ],
             "psr-4": {
                 "FastRoute\\": "src/"
-            }
+            },
+            "files": [
+                "src/functions.php"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -3198,12 +3198,12 @@
         },
         "installation-source": "dist",
         "autoload": {
-            "psr-4": {
-                "Opis\\Closure\\": "src/"
-            },
             "files": [
                 "functions.php"
-            ]
+            ],
+            "psr-4": {
+                "Opis\\Closure\\": "src/"
+            }
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -3519,12 +3519,12 @@
         "type": "library",
         "installation-source": "dist",
         "autoload": {
-            "files": [
-                "src/functions.php"
-            ],
             "psr-4": {
                 "DI\\": "src/"
-            }
+            },
+            "files": [
+                "src/functions.php"
+            ]
         },
         "notification-url": "https://packagist.org/downloads/",
         "license": [
@@ -3897,7 +3897,11 @@
             "spreadsheet",
             "xls",
             "xlsx"
-        ]
+        ],
+        "support": {
+            "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
+            "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/1.23.0"
+        }
     },
     {
         "name": "phpoffice/phpword",
@@ -5551,17 +5555,17 @@
     },
     {
         "name": "symfony/http-foundation",
-        "version": "v5.4.6",
-        "version_normalized": "5.4.6.0",
+        "version": "v5.4.8",
+        "version_normalized": "5.4.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/http-foundation.git",
-            "reference": "34e89bc147633c0f9dd6caaaf56da3b806a21465"
+            "reference": "ff2818d1c3d49860bcae1f2cbb5eb00fcd3bf9e2"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/34e89bc147633c0f9dd6caaaf56da3b806a21465",
-            "reference": "34e89bc147633c0f9dd6caaaf56da3b806a21465",
+            "url": "https://api.github.com/repos/symfony/http-foundation/zipball/ff2818d1c3d49860bcae1f2cbb5eb00fcd3bf9e2",
+            "reference": "ff2818d1c3d49860bcae1f2cbb5eb00fcd3bf9e2",
             "shasum": ""
         },
         "require": {
@@ -5579,7 +5583,7 @@
         "suggest": {
             "symfony/mime": "To use the file extension guesser"
         },
-        "time": "2022-03-05T21:03:43+00:00",
+        "time": "2022-04-22T08:14:12+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -5607,7 +5611,7 @@
         "description": "Defines an object-oriented layer for the HTTP specification",
         "homepage": "https://symfony.com",
         "support": {
-            "source": "https://github.com/symfony/http-foundation/tree/v5.4.6"
+            "source": "https://github.com/symfony/http-foundation/tree/v5.4.8"
         },
         "funding": [
             {
@@ -5796,17 +5800,17 @@
     },
     {
         "name": "symfony/translation",
-        "version": "v5.4.7",
-        "version_normalized": "5.4.7.0",
+        "version": "v5.4.8",
+        "version_normalized": "5.4.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/translation.git",
-            "reference": "e1eb790575202ee3ac2659f55b93b05853726f8e"
+            "reference": "f5c0f6d1f20993b2606f3a5f36b1dc8c1899170b"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/translation/zipball/e1eb790575202ee3ac2659f55b93b05853726f8e",
-            "reference": "e1eb790575202ee3ac2659f55b93b05853726f8e",
+            "url": "https://api.github.com/repos/symfony/translation/zipball/f5c0f6d1f20993b2606f3a5f36b1dc8c1899170b",
+            "reference": "f5c0f6d1f20993b2606f3a5f36b1dc8c1899170b",
             "shasum": ""
         },
         "require": {
@@ -5845,7 +5849,7 @@
             "symfony/config": "",
             "symfony/yaml": ""
         },
-        "time": "2022-03-24T17:09:09+00:00",
+        "time": "2022-04-22T08:14:12+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -5876,7 +5880,7 @@
         "description": "Provides tools to internationalize your application",
         "homepage": "https://symfony.com",
         "support": {
-            "source": "https://github.com/symfony/translation/tree/v5.4.7"
+            "source": "https://github.com/symfony/translation/tree/v5.4.8"
         },
         "funding": [
             {

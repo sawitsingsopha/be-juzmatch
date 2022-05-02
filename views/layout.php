@@ -16,6 +16,15 @@ $basePath = BasePath(true);
 <link rel="stylesheet" href="/<?= $basePath ?><?= CssFile(Config("PDF_STYLESHEET_FILENAME")) ?>"><!-- Absolute path with leading '/' -->
     <?php } ?>
 <?php } ?>
+
+<style>
+html, body {
+  font-family: "Prompt";
+  font-size: 16px;
+  font-weight: 400;
+ }
+</style>
+
 <?php if (!IsExport() || IsExport("print")) { ?>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="<?= $basePath ?>css/select2.min.css">
@@ -64,7 +73,11 @@ cssjs.push("<?= (IsRemote($file) ? "" : BasePath(true)) . $file ?>");
 var jqueryjs = [
     ew.PATH_BASE + "jquery/select2.full.min.js",
     ew.PATH_BASE + "jquery/jqueryfileupload.min.js",
-    ew.PATH_BASE + "jquery/typeahead.jquery.min.js"
+    ew.PATH_BASE + "jquery/typeahead.jquery.min.js",
+    // "https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.js",
+    // "https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.js",
+    "https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js",
+    "https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js",
 ];
 jqueryjs.push(ew.PATH_BASE + "jquery/pStrength.jquery.min.js");
 jqueryjs.push(ew.PATH_BASE + "jquery/pGenerator.jquery.min.js");

@@ -1017,19 +1017,22 @@ class SellerVerifyList extends SellerVerify
         // "view"
         $item = &$this->ListOptions->add("view");
         $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canView();
+        // $item->Visible = $Security->canView();
+        $item->Visible = false;
         $item->OnLeft = false;
 
         // "edit"
         $item = &$this->ListOptions->add("edit");
         $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canEdit();
+        // $item->Visible = $Security->canEdit();
+        $item->Visible = false;
         $item->OnLeft = false;
 
         // "delete"
         $item = &$this->ListOptions->add("delete");
         $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
+        // $item->Visible = $Security->canDelete();
+        $item->Visible = false;
         $item->OnLeft = false;
 
         // List actions
@@ -1184,7 +1187,8 @@ class SellerVerifyList extends SellerVerify
         $item = &$option->add("add");
         $addcaption = HtmlTitle($Language->phrase("AddLink"));
         $item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode(GetUrl($this->AddUrl)) . "\">" . $Language->phrase("AddLink") . "</a>";
-        $item->Visible = $this->AddUrl != "" && $Security->canAdd();
+        // $item->Visible = $this->AddUrl != "" && $Security->canAdd();
+        $item->Visible = false;
         $option = $options["action"];
 
         // Show column list for column visibility

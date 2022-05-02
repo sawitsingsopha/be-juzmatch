@@ -479,8 +479,8 @@ class DocJuzmatch1Preview extends DocJuzmatch1
         $this->file_house_regis->Visible = false;
         $this->file_titledeed->Visible = false;
         $this->file_other->Visible = false;
-        $this->attach_file->setVisibility();
-        $this->status->setVisibility();
+        $this->attach_file->Visible = false;
+        $this->status->Visible = false;
         $this->doc_date->Visible = false;
         $this->buyer_booking_asset_id->Visible = false;
         $this->doc_creden_id->Visible = false;
@@ -675,8 +675,6 @@ class DocJuzmatch1Preview extends DocJuzmatch1
             $this->updateSort($this->contact_email, $ctrl); // contact_email
             $this->updateSort($this->contact_lineid, $ctrl); // contact_lineid
             $this->updateSort($this->contact_phone, $ctrl); // contact_phone
-            $this->updateSort($this->attach_file, $ctrl); // attach_file
-            $this->updateSort($this->status, $ctrl); // status
             $this->updateSort($this->cdate, $ctrl); // cdate
         }
     }

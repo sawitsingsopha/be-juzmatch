@@ -32,12 +32,6 @@ class DocJuzmatch2Controller extends ControllerBase
         return $this->runPage($request, $response, $args, "DocJuzmatch2Edit");
     }
 
-    // delete
-    public function delete(Request $request, Response $response, array $args): Response
-    {
-        return $this->runPage($request, $response, $args, "DocJuzmatch2Delete");
-    }
-
     // preview
     public function preview(Request $request, Response $response, array $args): Response
     {

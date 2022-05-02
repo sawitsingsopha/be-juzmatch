@@ -703,8 +703,8 @@ class DocJuzmatch1List extends DocJuzmatch1
         $this->file_house_regis->Visible = false;
         $this->file_titledeed->Visible = false;
         $this->file_other->Visible = false;
-        $this->attach_file->setVisibility();
-        $this->status->setVisibility();
+        $this->attach_file->Visible = false;
+        $this->status->Visible = false;
         $this->doc_date->Visible = false;
         $this->buyer_booking_asset_id->Visible = false;
         $this->doc_creden_id->Visible = false;
@@ -1028,8 +1028,6 @@ class DocJuzmatch1List extends DocJuzmatch1
             $this->updateSort($this->contact_email, $ctrl); // contact_email
             $this->updateSort($this->contact_lineid, $ctrl); // contact_lineid
             $this->updateSort($this->contact_phone, $ctrl); // contact_phone
-            $this->updateSort($this->attach_file, $ctrl); // attach_file
-            $this->updateSort($this->status, $ctrl); // status
             $this->updateSort($this->cdate, $ctrl); // cdate
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1328,8 +1326,6 @@ class DocJuzmatch1List extends DocJuzmatch1
             $option->add("contact_email", $this->createColumnOption("contact_email"));
             $option->add("contact_lineid", $this->createColumnOption("contact_lineid"));
             $option->add("contact_phone", $this->createColumnOption("contact_phone"));
-            $option->add("attach_file", $this->createColumnOption("attach_file"));
-            $option->add("status", $this->createColumnOption("status"));
             $option->add("cdate", $this->createColumnOption("cdate"));
         }
 
@@ -1813,8 +1809,10 @@ class DocJuzmatch1List extends DocJuzmatch1
         // file_other
 
         // attach_file
+        $this->attach_file->CellCssStyle = "white-space: nowrap;";
 
         // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // doc_date
         $this->doc_date->CellCssStyle = "white-space: nowrap;";
@@ -1966,18 +1964,6 @@ class DocJuzmatch1List extends DocJuzmatch1
             // contact_phone
             $this->contact_phone->ViewValue = $this->contact_phone->CurrentValue;
             $this->contact_phone->ViewCustomAttributes = "";
-
-            // attach_file
-            $this->attach_file->ViewValue = $this->attach_file->CurrentValue;
-            $this->attach_file->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
 
             // cdate
             $this->cdate->ViewValue = $this->cdate->CurrentValue;
@@ -2161,16 +2147,6 @@ class DocJuzmatch1List extends DocJuzmatch1
             $this->contact_phone->LinkCustomAttributes = "";
             $this->contact_phone->HrefValue = "";
             $this->contact_phone->TooltipValue = "";
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-            $this->attach_file->TooltipValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
 
             // cdate
             $this->cdate->LinkCustomAttributes = "";

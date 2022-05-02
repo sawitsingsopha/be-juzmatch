@@ -191,6 +191,7 @@ return [
     "doc_temp" => \DI\create(DocTemp::class),
     "mpay_req_log" => \DI\create(MpayReqLog::class),
     "reason_terminate_contract" => \DI\create(ReasonTerminateContract::class),
+    "downloadFileFromCloud" => \DI\create(DownloadFileFromCloud::class),
 
     // User table
     "usertable" => \DI\get("users"),

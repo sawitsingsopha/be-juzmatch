@@ -538,6 +538,7 @@ class BuyerAllBookingAssetEdit extends BuyerAllBookingAsset
         $this->authorize_url->Visible = false;
         $this->amount_net->Visible = false;
         $this->amount_cust_fee->Visible = false;
+        $this->count_show_signer_3->Visible = false;
         $this->hideFieldsForAddEdit();
         $this->asset_id->Required = false;
         $this->member_id->Required = false;
@@ -990,6 +991,7 @@ class BuyerAllBookingAssetEdit extends BuyerAllBookingAsset
         $this->authorize_url->setDbValue($row['authorize_url']);
         $this->amount_net->setDbValue($row['amount_net']);
         $this->amount_cust_fee->setDbValue($row['amount_cust_fee']);
+        $this->count_show_signer_3->setDbValue($row['count_show_signer_3']);
     }
 
     // Return a row with default values
@@ -1028,6 +1030,7 @@ class BuyerAllBookingAssetEdit extends BuyerAllBookingAsset
         $row['authorize_url'] = null;
         $row['amount_net'] = null;
         $row['amount_cust_fee'] = null;
+        $row['count_show_signer_3'] = null;
         return $row;
     }
 
@@ -1154,6 +1157,9 @@ class BuyerAllBookingAssetEdit extends BuyerAllBookingAsset
 
         // amount_cust_fee
         $this->amount_cust_fee->RowCssClass = "row";
+
+        // count_show_signer_3
+        $this->count_show_signer_3->RowCssClass = "row";
 
         // View row
         if ($this->RowType == ROWTYPE_VIEW) {

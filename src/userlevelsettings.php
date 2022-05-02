@@ -428,7 +428,10 @@ $USER_LEVEL_PRIVS = [["{92B999EB-369F-4874-8848-2BC343EBF36E}address","-2","0"],
     ["{92B999EB-369F-4874-8848-2BC343EBF36E}mpay_req_log","1","47"],
     ["{92B999EB-369F-4874-8848-2BC343EBF36E}reason_terminate_contract","-2","0"],
     ["{92B999EB-369F-4874-8848-2BC343EBF36E}reason_terminate_contract","0","0"],
-    ["{92B999EB-369F-4874-8848-2BC343EBF36E}reason_terminate_contract","1","47"]];
+    ["{92B999EB-369F-4874-8848-2BC343EBF36E}reason_terminate_contract","1","47"],
+    ["{92B999EB-369F-4874-8848-2BC343EBF36E}downloadFileFromCloud.php","-2","0"],
+    ["{92B999EB-369F-4874-8848-2BC343EBF36E}downloadFileFromCloud.php","0","0"],
+    ["{92B999EB-369F-4874-8848-2BC343EBF36E}downloadFileFromCloud.php","1","8"]];
 // User level table info
 $USER_LEVEL_TABLES = [["address","address","ที่อยู่",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","addresslist"],
     ["amphur","amphur","Master Amphur",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","amphurlist"],
@@ -565,8 +568,9 @@ $USER_LEVEL_TABLES = [["address","address","ที่อยู่",true,"{92B999
     ["doc_creden_running","doc_creden_running","doc creden running",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","doccredenrunninglist"],
     ["doc_creden_signer","doc_creden_signer","doc creden signer",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","doccredensignerlist"],
     ["doc_juzmatch1","doc_juzmatch1","สัญญา 1",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","docjuzmatch1list"],
-    ["doc_juzmatch2","doc_juzmatch2","doc juzmatch 2",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","docjuzmatch2list"],
-    ["doc_juzmatch3","doc_juzmatch3","doc juzmatch 3",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","docjuzmatch3list"],
+    ["doc_juzmatch2","doc_juzmatch2","สัญญา 2",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","docjuzmatch2list"],
+    ["doc_juzmatch3","doc_juzmatch3","สัญญา 3",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","docjuzmatch3list"],
     ["doc_temp","doc_temp","Template Document",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","doctemplist"],
     ["mpay_req_log","mpay_req_log","mpay req log",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","mpayreqloglist"],
-    ["reason_terminate_contract","reason_terminate_contract","reason terminate contract",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","reasonterminatecontractlist"]];
+    ["reason_terminate_contract","reason_terminate_contract","reason terminate contract",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","reasonterminatecontractlist"],
+    ["downloadFileFromCloud.php","downloadFileFromCloud","downloadFileFromCloud",true,"{92B999EB-369F-4874-8848-2BC343EBF36E}","downloadfilefromcloud/downloadfilefromcloud"]];

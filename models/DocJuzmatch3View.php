@@ -1314,18 +1314,6 @@ class DocJuzmatch3View extends DocJuzmatch3
             }
             $this->file_other->ViewCustomAttributes = "";
 
-            // attach_file
-            $this->attach_file->ViewValue = $this->attach_file->CurrentValue;
-            $this->attach_file->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
-
             // cdate
             $this->cdate->ViewValue = $this->cdate->CurrentValue;
             $this->cdate->ViewValue = FormatDateTime($this->cdate->ViewValue, $this->cdate->formatPattern());
@@ -1592,16 +1580,6 @@ class DocJuzmatch3View extends DocJuzmatch3
             $this->file_other->HrefValue = "";
             $this->file_other->ExportHrefValue = $this->file_other->UploadPath . $this->file_other->Upload->DbValue;
             $this->file_other->TooltipValue = "";
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-            $this->attach_file->TooltipValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
 
             // cdate
             $this->cdate->LinkCustomAttributes = "";

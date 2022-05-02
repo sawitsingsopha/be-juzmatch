@@ -27,6 +27,14 @@ class DocJuzmatch2 extends DbTable
     public $OffsetColumnClass = "col-sm-8 offset-sm-4";
     public $TableLeftColumnClass = "w-col-4";
 
+    // Audit trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Export
     public $ExportDoc;
 
@@ -73,13 +81,13 @@ class DocJuzmatch2 extends DbTable
     public $company_seal_email;
     public $file_idcard;
     public $file_house_regis;
+    public $file_loan;
     public $file_other;
     public $contact_address;
     public $contact_address2;
     public $contact_email;
     public $contact_lineid;
     public $contact_phone;
-    public $file_loan;
     public $attach_file;
     public $status;
     public $doc_creden_id;
@@ -1080,6 +1088,29 @@ class DocJuzmatch2 extends DbTable
         $this->file_house_regis->UploadPath = "/upload/";
         $this->Fields['file_house_regis'] = &$this->file_house_regis;
 
+        // file_loan
+        $this->file_loan = new DbField(
+            'doc_juzmatch2',
+            'doc_juzmatch2',
+            'x_file_loan',
+            'file_loan',
+            '`file_loan`',
+            '`file_loan`',
+            200,
+            250,
+            -1,
+            true,
+            '`file_loan`',
+            false,
+            false,
+            false,
+            'FORMATTED TEXT',
+            'FILE'
+        );
+        $this->file_loan->InputTextType = "text";
+        $this->file_loan->UploadPath = "/upload/";
+        $this->Fields['file_loan'] = &$this->file_loan;
+
         // file_other
         $this->file_other = new DbField(
             'doc_juzmatch2',
@@ -1213,28 +1244,6 @@ class DocJuzmatch2 extends DbTable
         $this->contact_phone->InputTextType = "text";
         $this->Fields['contact_phone'] = &$this->contact_phone;
 
-        // file_loan
-        $this->file_loan = new DbField(
-            'doc_juzmatch2',
-            'doc_juzmatch2',
-            'x_file_loan',
-            'file_loan',
-            '`file_loan`',
-            '`file_loan`',
-            200,
-            250,
-            -1,
-            false,
-            '`file_loan`',
-            false,
-            false,
-            false,
-            'FORMATTED TEXT',
-            'TEXT'
-        );
-        $this->file_loan->InputTextType = "text";
-        $this->Fields['file_loan'] = &$this->file_loan;
-
         // attach_file
         $this->attach_file = new DbField(
             'doc_juzmatch2',
@@ -1255,6 +1264,7 @@ class DocJuzmatch2 extends DbTable
             'TEXT'
         );
         $this->attach_file->InputTextType = "text";
+        $this->attach_file->Sortable = false; // Allow sort
         $this->Fields['attach_file'] = &$this->attach_file;
 
         // status
@@ -1277,6 +1287,7 @@ class DocJuzmatch2 extends DbTable
             'SELECT'
         );
         $this->status->InputTextType = "text";
+        $this->status->Sortable = false; // Allow sort
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->Lookup = new Lookup('status', 'doc_juzmatch2', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
@@ -2070,6 +2081,9 @@ class DocJuzmatch2 extends DbTable
             // Get insert id if necessary
             $this->id->setDbValue($conn->lastInsertId());
             $rs['id'] = $this->id->DbValue;
+            if ($this->AuditTrailOnAdd) {
+                $this->writeAuditTrailOnAdd($rs);
+            }
         }
         return $success;
     }
@@ -2110,6 +2124,14 @@ class DocJuzmatch2 extends DbTable
         // If no field is updated, execute may return 0. Treat as success
         $success = $this->updateSql($rs, $where, $curfilter)->execute();
         $success = ($success > 0) ? $success : true;
+        if ($success && $this->AuditTrailOnEdit && $rsold) {
+            $rsaudit = $rs;
+            $fldname = 'id';
+            if (!array_key_exists($fldname, $rsaudit)) {
+                $rsaudit[$fldname] = $rsold[$fldname];
+            }
+            $this->writeAuditTrailOnEdit($rsold, $rsaudit);
+        }
         return $success;
     }
 
@@ -2144,6 +2166,9 @@ class DocJuzmatch2 extends DbTable
         $success = true;
         if ($success) {
             $success = $this->deleteSql($rs, $where, $curfilter)->execute();
+        }
+        if ($success && $this->AuditTrailOnDelete) {
+            $this->writeAuditTrailOnDelete($rs);
         }
         return $success;
     }
@@ -2196,13 +2221,13 @@ class DocJuzmatch2 extends DbTable
         $this->company_seal_email->DbValue = $row['company_seal_email'];
         $this->file_idcard->Upload->DbValue = $row['file_idcard'];
         $this->file_house_regis->Upload->DbValue = $row['file_house_regis'];
+        $this->file_loan->Upload->DbValue = $row['file_loan'];
         $this->file_other->Upload->DbValue = $row['file_other'];
         $this->contact_address->DbValue = $row['contact_address'];
         $this->contact_address2->DbValue = $row['contact_address2'];
         $this->contact_email->DbValue = $row['contact_email'];
         $this->contact_lineid->DbValue = $row['contact_lineid'];
         $this->contact_phone->DbValue = $row['contact_phone'];
-        $this->file_loan->DbValue = $row['file_loan'];
         $this->attach_file->DbValue = $row['attach_file'];
         $this->status->DbValue = $row['status'];
         $this->doc_creden_id->DbValue = $row['doc_creden_id'];
@@ -2238,6 +2263,13 @@ class DocJuzmatch2 extends DbTable
         foreach ($oldFiles as $oldFile) {
             if (file_exists($this->file_house_regis->oldPhysicalUploadPath() . $oldFile)) {
                 @unlink($this->file_house_regis->oldPhysicalUploadPath() . $oldFile);
+            }
+        }
+        $this->file_loan->OldUploadPath = "/upload/";
+        $oldFiles = EmptyValue($row['file_loan']) ? [] : [$row['file_loan']];
+        foreach ($oldFiles as $oldFile) {
+            if (file_exists($this->file_loan->oldPhysicalUploadPath() . $oldFile)) {
+                @unlink($this->file_loan->oldPhysicalUploadPath() . $oldFile);
             }
         }
         $this->file_other->OldUploadPath = "/upload/";
@@ -2605,13 +2637,13 @@ class DocJuzmatch2 extends DbTable
         $this->company_seal_email->setDbValue($row['company_seal_email']);
         $this->file_idcard->Upload->DbValue = $row['file_idcard'];
         $this->file_house_regis->Upload->DbValue = $row['file_house_regis'];
+        $this->file_loan->Upload->DbValue = $row['file_loan'];
         $this->file_other->Upload->DbValue = $row['file_other'];
         $this->contact_address->setDbValue($row['contact_address']);
         $this->contact_address2->setDbValue($row['contact_address2']);
         $this->contact_email->setDbValue($row['contact_email']);
         $this->contact_lineid->setDbValue($row['contact_lineid']);
         $this->contact_phone->setDbValue($row['contact_phone']);
-        $this->file_loan->setDbValue($row['file_loan']);
         $this->attach_file->setDbValue($row['attach_file']);
         $this->status->setDbValue($row['status']);
         $this->doc_creden_id->setDbValue($row['doc_creden_id']);
@@ -2726,6 +2758,8 @@ class DocJuzmatch2 extends DbTable
 
         // file_house_regis
 
+        // file_loan
+
         // file_other
 
         // contact_address
@@ -2738,11 +2772,11 @@ class DocJuzmatch2 extends DbTable
 
         // contact_phone
 
-        // file_loan
-
         // attach_file
+        $this->attach_file->CellCssStyle = "white-space: nowrap;";
 
         // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // doc_creden_id
         $this->doc_creden_id->CellCssStyle = "white-space: nowrap;";
@@ -2976,6 +3010,15 @@ class DocJuzmatch2 extends DbTable
         }
         $this->file_house_regis->ViewCustomAttributes = "";
 
+        // file_loan
+        $this->file_loan->UploadPath = "/upload/";
+        if (!EmptyValue($this->file_loan->Upload->DbValue)) {
+            $this->file_loan->ViewValue = $this->file_loan->Upload->DbValue;
+        } else {
+            $this->file_loan->ViewValue = "";
+        }
+        $this->file_loan->ViewCustomAttributes = "";
+
         // file_other
         $this->file_other->UploadPath = "/upload/";
         if (!EmptyValue($this->file_other->Upload->DbValue)) {
@@ -3004,10 +3047,6 @@ class DocJuzmatch2 extends DbTable
         // contact_phone
         $this->contact_phone->ViewValue = $this->contact_phone->CurrentValue;
         $this->contact_phone->ViewCustomAttributes = "";
-
-        // file_loan
-        $this->file_loan->ViewValue = $this->file_loan->CurrentValue;
-        $this->file_loan->ViewCustomAttributes = "";
 
         // attach_file
         $this->attach_file->ViewValue = $this->attach_file->CurrentValue;
@@ -3303,6 +3342,12 @@ class DocJuzmatch2 extends DbTable
         $this->file_house_regis->ExportHrefValue = $this->file_house_regis->UploadPath . $this->file_house_regis->Upload->DbValue;
         $this->file_house_regis->TooltipValue = "";
 
+        // file_loan
+        $this->file_loan->LinkCustomAttributes = "";
+        $this->file_loan->HrefValue = "";
+        $this->file_loan->ExportHrefValue = $this->file_loan->UploadPath . $this->file_loan->Upload->DbValue;
+        $this->file_loan->TooltipValue = "";
+
         // file_other
         $this->file_other->LinkCustomAttributes = "";
         $this->file_other->HrefValue = "";
@@ -3333,11 +3378,6 @@ class DocJuzmatch2 extends DbTable
         $this->contact_phone->LinkCustomAttributes = "";
         $this->contact_phone->HrefValue = "";
         $this->contact_phone->TooltipValue = "";
-
-        // file_loan
-        $this->file_loan->LinkCustomAttributes = "";
-        $this->file_loan->HrefValue = "";
-        $this->file_loan->TooltipValue = "";
 
         // attach_file
         $this->attach_file->LinkCustomAttributes = "";
@@ -3803,6 +3843,19 @@ class DocJuzmatch2 extends DbTable
             $this->file_house_regis->Upload->FileName = $this->file_house_regis->CurrentValue;
         }
 
+        // file_loan
+        $this->file_loan->setupEditAttributes();
+        $this->file_loan->EditCustomAttributes = "";
+        $this->file_loan->UploadPath = "/upload/";
+        if (!EmptyValue($this->file_loan->Upload->DbValue)) {
+            $this->file_loan->EditValue = $this->file_loan->Upload->DbValue;
+        } else {
+            $this->file_loan->EditValue = "";
+        }
+        if (!EmptyValue($this->file_loan->CurrentValue)) {
+            $this->file_loan->Upload->FileName = $this->file_loan->CurrentValue;
+        }
+
         // file_other
         $this->file_other->setupEditAttributes();
         $this->file_other->EditCustomAttributes = "";
@@ -3860,15 +3913,6 @@ class DocJuzmatch2 extends DbTable
         }
         $this->contact_phone->EditValue = $this->contact_phone->CurrentValue;
         $this->contact_phone->PlaceHolder = RemoveHtml($this->contact_phone->caption());
-
-        // file_loan
-        $this->file_loan->setupEditAttributes();
-        $this->file_loan->EditCustomAttributes = "";
-        if (!$this->file_loan->Raw) {
-            $this->file_loan->CurrentValue = HtmlDecode($this->file_loan->CurrentValue);
-        }
-        $this->file_loan->EditValue = $this->file_loan->CurrentValue;
-        $this->file_loan->PlaceHolder = RemoveHtml($this->file_loan->caption());
 
         // attach_file
         $this->attach_file->setupEditAttributes();
@@ -4047,15 +4091,13 @@ class DocJuzmatch2 extends DbTable
                     $doc->exportCaption($this->company_seal_email);
                     $doc->exportCaption($this->file_idcard);
                     $doc->exportCaption($this->file_house_regis);
+                    $doc->exportCaption($this->file_loan);
                     $doc->exportCaption($this->file_other);
                     $doc->exportCaption($this->contact_address);
                     $doc->exportCaption($this->contact_address2);
                     $doc->exportCaption($this->contact_email);
                     $doc->exportCaption($this->contact_lineid);
                     $doc->exportCaption($this->contact_phone);
-                    $doc->exportCaption($this->file_loan);
-                    $doc->exportCaption($this->attach_file);
-                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->cdate);
                 } else {
                     $doc->exportCaption($this->document_date);
@@ -4092,13 +4134,12 @@ class DocJuzmatch2 extends DbTable
                     $doc->exportCaption($this->juzmatch_authority2_email);
                     $doc->exportCaption($this->company_seal_name);
                     $doc->exportCaption($this->company_seal_email);
+                    $doc->exportCaption($this->file_loan);
                     $doc->exportCaption($this->contact_address);
                     $doc->exportCaption($this->contact_address2);
                     $doc->exportCaption($this->contact_email);
                     $doc->exportCaption($this->contact_lineid);
                     $doc->exportCaption($this->contact_phone);
-                    $doc->exportCaption($this->attach_file);
-                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->cdate);
                     $doc->exportCaption($this->cuser);
                     $doc->exportCaption($this->cip);
@@ -4175,15 +4216,13 @@ class DocJuzmatch2 extends DbTable
                         $doc->exportField($this->company_seal_email);
                         $doc->exportField($this->file_idcard);
                         $doc->exportField($this->file_house_regis);
+                        $doc->exportField($this->file_loan);
                         $doc->exportField($this->file_other);
                         $doc->exportField($this->contact_address);
                         $doc->exportField($this->contact_address2);
                         $doc->exportField($this->contact_email);
                         $doc->exportField($this->contact_lineid);
                         $doc->exportField($this->contact_phone);
-                        $doc->exportField($this->file_loan);
-                        $doc->exportField($this->attach_file);
-                        $doc->exportField($this->status);
                         $doc->exportField($this->cdate);
                     } else {
                         $doc->exportField($this->document_date);
@@ -4220,13 +4259,12 @@ class DocJuzmatch2 extends DbTable
                         $doc->exportField($this->juzmatch_authority2_email);
                         $doc->exportField($this->company_seal_name);
                         $doc->exportField($this->company_seal_email);
+                        $doc->exportField($this->file_loan);
                         $doc->exportField($this->contact_address);
                         $doc->exportField($this->contact_address2);
                         $doc->exportField($this->contact_email);
                         $doc->exportField($this->contact_lineid);
                         $doc->exportField($this->contact_phone);
-                        $doc->exportField($this->attach_file);
-                        $doc->exportField($this->status);
                         $doc->exportField($this->cdate);
                         $doc->exportField($this->cuser);
                         $doc->exportField($this->cip);
@@ -4265,6 +4303,9 @@ class DocJuzmatch2 extends DbTable
         } elseif ($fldparm == 'file_house_regis') {
             $fldName = "file_house_regis";
             $fileNameFld = "file_house_regis";
+        } elseif ($fldparm == 'file_loan') {
+            $fldName = "file_loan";
+            $fileNameFld = "file_loan";
         } elseif ($fldparm == 'file_other') {
             $fldName = "file_other";
             $fileNameFld = "file_other";
@@ -4373,6 +4414,140 @@ class DocJuzmatch2 extends DbTable
             return true;
         }
         return false;
+    }
+
+    // Write Audit Trail start/end for grid update
+    public function writeAuditTrailDummy($typ)
+    {
+        $table = 'doc_juzmatch2';
+        $usr = CurrentUserID();
+        WriteAuditLog($usr, $typ, $table, "", "", "", "");
+    }
+
+    // Write Audit Trail (add page)
+    public function writeAuditTrailOnAdd(&$rs)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnAdd) {
+            return;
+        }
+        $table = 'doc_juzmatch2';
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rs['id'];
+
+        // Write Audit Trail
+        $usr = CurrentUserID();
+        foreach (array_keys($rs) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") {
+                    $newvalue = $Language->phrase("PasswordMask"); // Password Field
+                } elseif ($this->Fields[$fldname]->DataType == DATATYPE_MEMO) {
+                    if (Config("AUDIT_TRAIL_TO_DATABASE")) {
+                        $newvalue = $rs[$fldname];
+                    } else {
+                        $newvalue = "[MEMO]"; // Memo Field
+                    }
+                } elseif ($this->Fields[$fldname]->DataType == DATATYPE_XML) {
+                    $newvalue = "[XML]"; // XML Field
+                } else {
+                    $newvalue = $rs[$fldname];
+                }
+                WriteAuditLog($usr, "A", $table, $fldname, $key, "", $newvalue);
+            }
+        }
+    }
+
+    // Write Audit Trail (edit page)
+    public function writeAuditTrailOnEdit(&$rsold, &$rsnew)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnEdit) {
+            return;
+        }
+        $table = 'doc_juzmatch2';
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rsold['id'];
+
+        // Write Audit Trail
+        $usr = CurrentUserID();
+        foreach (array_keys($rsnew) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && array_key_exists($fldname, $rsold) && $this->Fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->DataType == DATATYPE_DATE) { // DateTime field
+                    $modified = (FormatDateTime($rsold[$fldname], 0) != FormatDateTime($rsnew[$fldname], 0));
+                } else {
+                    $modified = !CompareValue($rsold[$fldname], $rsnew[$fldname]);
+                }
+                if ($modified) {
+                    if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
+                        $oldvalue = $Language->phrase("PasswordMask");
+                        $newvalue = $Language->phrase("PasswordMask");
+                    } elseif ($this->Fields[$fldname]->DataType == DATATYPE_MEMO) { // Memo field
+                        if (Config("AUDIT_TRAIL_TO_DATABASE")) {
+                            $oldvalue = $rsold[$fldname];
+                            $newvalue = $rsnew[$fldname];
+                        } else {
+                            $oldvalue = "[MEMO]";
+                            $newvalue = "[MEMO]";
+                        }
+                    } elseif ($this->Fields[$fldname]->DataType == DATATYPE_XML) { // XML field
+                        $oldvalue = "[XML]";
+                        $newvalue = "[XML]";
+                    } else {
+                        $oldvalue = $rsold[$fldname];
+                        $newvalue = $rsnew[$fldname];
+                    }
+                    WriteAuditLog($usr, "U", $table, $fldname, $key, $oldvalue, $newvalue);
+                }
+            }
+        }
+    }
+
+    // Write Audit Trail (delete page)
+    public function writeAuditTrailOnDelete(&$rs)
+    {
+        global $Language;
+        if (!$this->AuditTrailOnDelete) {
+            return;
+        }
+        $table = 'doc_juzmatch2';
+
+        // Get key value
+        $key = "";
+        if ($key != "") {
+            $key .= Config("COMPOSITE_KEY_SEPARATOR");
+        }
+        $key .= $rs['id'];
+
+        // Write Audit Trail
+        $curUser = CurrentUserID();
+        foreach (array_keys($rs) as $fldname) {
+            if (array_key_exists($fldname, $this->Fields) && $this->Fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
+                if ($this->Fields[$fldname]->HtmlTag == "PASSWORD") {
+                    $oldvalue = $Language->phrase("PasswordMask"); // Password Field
+                } elseif ($this->Fields[$fldname]->DataType == DATATYPE_MEMO) {
+                    if (Config("AUDIT_TRAIL_TO_DATABASE")) {
+                        $oldvalue = $rs[$fldname];
+                    } else {
+                        $oldvalue = "[MEMO]"; // Memo field
+                    }
+                } elseif ($this->Fields[$fldname]->DataType == DATATYPE_XML) {
+                    $oldvalue = "[XML]"; // XML field
+                } else {
+                    $oldvalue = $rs[$fldname];
+                }
+                WriteAuditLog($curUser, "D", $table, $fldname, $key, $oldvalue, "");
+            }
+        }
     }
 
     // Table level events

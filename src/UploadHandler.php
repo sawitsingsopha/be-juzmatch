@@ -12,6 +12,9 @@
 
 use Google\Cloud\Storage\StorageClient;
 error_reporting(E_ERROR | E_PARSE);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 class UploadHandler
 {
@@ -263,6 +266,7 @@ class UploadHandler
         // print_r($this->options['upload_dir'].$this->get_user_path().$version_path.$file_name);
         // print_r($this->options['upload_dir'].$this->get_user_path());
         return $this->options['upload_dir'].$this->get_user_path().$version_path.$file_name;
+        // return $this->options['upload_dir'].$this->get_user_path().$version_path;
     }
 
     protected function get_query_separator($url) {
@@ -1378,6 +1382,11 @@ class UploadHandler
             // $file_path = $this->get_upload_path($file->name);
             $file_path = '../upload/tem/'.$file->name;
 
+            // get field name
+            $field_name_arr = preg_split("#/#", $this->get_upload_path()); 
+            $field_name = $field_name_arr[2];
+            // echo $field_name;
+
             // เช็คว่าเป็นไฟล์ทั่วไปหรือไม่ ด้วยฟังก์ชัน is_file() == > return ture,false
             $append_file = $content_range && is_file($file_path) && $file->size > $this->get_file_size($file_path);
 
@@ -1432,6 +1441,20 @@ class UploadHandler
                 $storage = new StorageClient([
                     'keyFilePath' => '../bg-server-aefde8e14329.json',
                 ]);
+
+                $predefinedAcl = "publicRead";
+
+                // check menu name
+                // echo $field_name;
+                // x_file_idcard
+                // x_file_house_regis
+                // x_file_titledeed
+                // x_file_other
+                // x_doc_temp_file
+                // x_file_loan
+                if ($field_name == "x_file_idcard" || $field_name == "x_file_house_regis" || $field_name == "x_file_titledeed" || $field_name == "x_file_other" || $field_name == "x_doc_temp_file" || $field_name == "x_file_loan") {
+                    $predefinedAcl = "private";
+                }
             
                 $bucketName = "juzmatch_1";
                 $bucket = $storage->bucket($bucketName);
@@ -1439,7 +1462,7 @@ class UploadHandler
                 // $chunkSize = 262144; // chunk in bytes
                 $options = [
                     // 'chunkSize' => $chunkSize,
-                    'predefinedAcl' => 'publicRead'
+                    'predefinedAcl' => $predefinedAcl
                 ];
             
                 $uploader = $bucket->getResumableUploader(
@@ -1456,18 +1479,41 @@ class UploadHandler
             
                 // echo "File uploaded successfully. File path is: https://storage.googleapis.com/$bucketName/$fileName";
 
-                $file->name = "https://storage.googleapis.com/".$bucketName."/".$file->name;
-                $file->url = $file->name;
-                $file->thumbnailUrl = $file->name;
+                // Delete tem File After Upload To Cloud Storage
+                unlink($fileName);
+
+                if ($field_name == "x_file_idcard" || $field_name == "x_file_house_regis" || $field_name == "x_file_titledeed" || $field_name == "x_file_other" || $field_name == "x_doc_temp_file" || $field_name == "x_file_loan") {
+                    $file->name = $file->name;
+                    $file->url = "downloadfilefromcloud/downloadfilefromcloud?fileName=".$file->name;
+                    $file->thumbnailUrl = $file->url;
+                }else {
+                    $file->name = "https://storage.googleapis.com/".$bucketName."/".$file->name;
+                    $file->url = $file->name;
+                    $file->thumbnailUrl = $file->name;
+                }
+
                 // $file->deleteUrl = $file->name."&_method=DELETE";
             } catch (Exception $e) {
                 // echo $e->getMessage();
             }
         }
-
+        // print_r($file);
         return $file;
+        // return $file;
+        // C:\\xampp\\htdocs\\juzmatch-backend\\upload\\temp__io42qvohfmgqa6r167eint8vds\/doc_juzmatch1\/x_file_idcard\/
+        // return $upload_dir;
 
-        // ==> print_r($file);
+        // print_r($file);
+        // $str = preg_replace('/^.*>\s*/', '', $upload_dir);
+
+        // $upload_dir = substr($upload_dir, 0, strpos($upload_dir, "{"));
+        
+        // $arr = explode("/", $upload_dir, 2);
+        // print_r($upload_dir);
+        // gettype($upload_dir);
+        // $path = explode("/",$upload_dir);
+        // print_r(explode("/",$upload_dir));
+        // echo explode("/",$upload_dir[2]);
         // deleteType: "POST"
         // deleteUrl: "/juzmatch-backend/api/jupload?rnd=54036014&csrf_name=csrf61604b37ad176&csrf_value=3506dded0910b66065c1844bec190262&id=x_image&table=article_banner&session=RWPVrzxH1pbngZKEERY_WENJXVe84137uEegXEu6p2E.&x_image=___layer002.png&_method=DELETE"
         // exists: true
@@ -1764,7 +1810,7 @@ class UploadHandler
                 $this->get_singular_param_name() => $this->get_file_object($file_name)
             );
         } else {
-
+            // print_r($file_name);
             $response = array(
                 $this->options['param_name'] => $this->get_file_objects(),
             );
@@ -1774,18 +1820,33 @@ class UploadHandler
             //     $this->options['param_name'] => $this->get_file_objects(),
             // );
 
-
             $_nmkey = '';
             foreach (array_keys($response) as $nmkey) {
                 $_nmkey = $nmkey;
             }
 
-            // print_r($response["".$_nmkey.""][0]->name);
+            // print_r($response["".$_nmkey.""][0]);
             $_name = $response["".$_nmkey.""][0]->name;
+            $field_name = $_GET['id'];
 
-             $response["".$_nmkey.""][0]->name = "https://storage.googleapis.com/".$bucketName."/".$_name;
-             $response["".$_nmkey.""][0]->url = "https://storage.googleapis.com/".$bucketName."/".$_name;
-             $response["".$_nmkey.""][0]->thumbnailUrl = "https://storage.googleapis.com/".$bucketName."/".$_name;
+            $protocol = stripos($_SERVER['SERVER_PROTOCOL'],'https') === 0 ? 'https://' : 'http://';
+            $host = $_SERVER['SERVER_NAME'];
+
+            if ($host == 'localhost') {
+                $host= $host."/juzmatch-backend";  
+            }
+
+            $base_url = $protocol.$host;
+
+            if ($field_name == "x_file_idcard" || $field_name == "x_file_house_regis" || $field_name == "x_file_titledeed" || $field_name == "x_file_other" || $field_name == "x_doc_temp_file" || $field_name == "x_file_loan") {
+                $response["".$_nmkey.""][0]->name = $_name;
+                $response["".$_nmkey.""][0]->url = $base_url."/downloadfilefromcloud/downloadfilefromcloud?fileName=".$_name;
+                $response["".$_nmkey.""][0]->thumbnailUrl = $response["".$_nmkey.""][0]->url;
+            }else {
+                $response["".$_nmkey.""][0]->name = "https://storage.googleapis.com/".$bucketName."/".$_name;
+                $response["".$_nmkey.""][0]->url = "https://storage.googleapis.com/".$bucketName."/".$_name;
+                $response["".$_nmkey.""][0]->thumbnailUrl = "https://storage.googleapis.com/".$bucketName."/".$_name;
+            }
              $response["".$_nmkey.""][0]->exists = true;
              $response['x_image'][0]->deleteUrl = "https://storage.googleapis.com/".$bucketName."/".$_name;
         }

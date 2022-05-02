@@ -640,7 +640,7 @@ class BaseUploadHandler
         }
         $new_width = $src_width = imagesx($image);
         $new_height = $src_height = imagesy($image);
-        $new_img = imagecreatetruecolor((int)$new_width, (int)$new_height);
+        $new_img = imagecreatetruecolor($new_width, $new_height);
         $src_x = 0;
         $src_y = 0;
         switch ($mode) {
@@ -666,12 +666,12 @@ class BaseUploadHandler
             $image,
             0,
             0,
-            (int)$src_x,
-            (int)$src_y,
-            (int)$new_width,
-            (int)$new_height,
-            (int)$src_width,
-            (int)$src_height
+            $src_x,
+            $src_y,
+            $new_width,
+            $new_height,
+            $src_width,
+            $src_height
         );
         return $new_img;
     }
@@ -805,7 +805,7 @@ class BaseUploadHandler
             $new_height = $img_height * $scale;
             $dst_x = 0;
             $dst_y = 0;
-            $new_img = imagecreatetruecolor((int)$new_width, (int)$new_height);
+            $new_img = imagecreatetruecolor($new_width, $new_height);
         } else {
             if (($img_width / $img_height) >= ($max_width / $max_height)) {
                 $new_width = $img_width / ($img_height / $max_height);
@@ -816,7 +816,7 @@ class BaseUploadHandler
             }
             $dst_x = 0 - ($new_width - $max_width) / 2;
             $dst_y = 0 - ($new_height - $max_height) / 2;
-            $new_img = imagecreatetruecolor((int)$max_width, (int)$max_height);
+            $new_img = imagecreatetruecolor($max_width, $max_height);
         }
         // Handle transparency in GIF and PNG images:
         switch ($type) {
@@ -832,14 +832,14 @@ class BaseUploadHandler
         $success = imagecopyresampled(
             $new_img,
             $src_img,
-            (int)$dst_x,
-            (int)$dst_y,
+            $dst_x,
+            $dst_y,
             0,
             0,
-            (int)$new_width,
-            (int)$new_height,
-            (int)$img_width,
-            (int)$img_height
+            $new_width,
+            $new_height,
+            $img_width,
+            $img_height
         ) && $write_func($new_img, $new_file_path, $image_quality);
         $this->gd_set_image_object($file_path, $new_img);
         return $success;
@@ -1484,6 +1484,6 @@ class BaseUploadHandler
 
     protected function basename($filepath, $suffix = null) {
         $splited = preg_split('/\//', rtrim ($filepath, '/ '));
-        return substr(basename('X'.$splited[count($splited)-1], $suffix ?? ""), 1); //***
+        return substr(basename('X'.$splited[count($splited)-1], $suffix), 1);
     }
 }

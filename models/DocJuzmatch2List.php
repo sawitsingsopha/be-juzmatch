@@ -58,6 +58,14 @@ class DocJuzmatch2List extends DocJuzmatch2
     public $MultiDeleteUrl;
     public $MultiUpdateUrl;
 
+    // Audit Trail
+    public $AuditTrailOnAdd = true;
+    public $AuditTrailOnEdit = true;
+    public $AuditTrailOnDelete = true;
+    public $AuditTrailOnView = false;
+    public $AuditTrailOnViewData = false;
+    public $AuditTrailOnSearch = false;
+
     // Page headings
     public $Heading = "";
     public $Subheading = "";
@@ -372,6 +380,8 @@ class DocJuzmatch2List extends DocJuzmatch2
 		        $this->file_idcard->UploadPath = $this->file_idcard->OldUploadPath;
 		        $this->file_house_regis->OldUploadPath = "/upload/";
 		        $this->file_house_regis->UploadPath = $this->file_house_regis->OldUploadPath;
+		        $this->file_loan->OldUploadPath = "/upload/";
+		        $this->file_loan->UploadPath = $this->file_loan->OldUploadPath;
 		        $this->file_other->OldUploadPath = "/upload/";
 		        $this->file_other->UploadPath = $this->file_other->OldUploadPath;
                 $row = $this->getRecordFromArray($rs->fields);
@@ -695,15 +705,15 @@ class DocJuzmatch2List extends DocJuzmatch2
         $this->company_seal_email->setVisibility();
         $this->file_idcard->Visible = false;
         $this->file_house_regis->Visible = false;
+        $this->file_loan->setVisibility();
         $this->file_other->Visible = false;
         $this->contact_address->setVisibility();
         $this->contact_address2->setVisibility();
         $this->contact_email->setVisibility();
         $this->contact_lineid->setVisibility();
         $this->contact_phone->setVisibility();
-        $this->file_loan->Visible = false;
-        $this->attach_file->setVisibility();
-        $this->status->setVisibility();
+        $this->attach_file->Visible = false;
+        $this->status->Visible = false;
         $this->doc_creden_id->Visible = false;
         $this->cdate->setVisibility();
         $this->cuser->Visible = false;
@@ -1036,13 +1046,12 @@ class DocJuzmatch2List extends DocJuzmatch2
             $this->updateSort($this->juzmatch_authority2_email, $ctrl); // juzmatch_authority2_email
             $this->updateSort($this->company_seal_name, $ctrl); // company_seal_name
             $this->updateSort($this->company_seal_email, $ctrl); // company_seal_email
+            $this->updateSort($this->file_loan, $ctrl); // file_loan
             $this->updateSort($this->contact_address, $ctrl); // contact_address
             $this->updateSort($this->contact_address2, $ctrl); // contact_address2
             $this->updateSort($this->contact_email, $ctrl); // contact_email
             $this->updateSort($this->contact_lineid, $ctrl); // contact_lineid
             $this->updateSort($this->contact_phone, $ctrl); // contact_phone
-            $this->updateSort($this->attach_file, $ctrl); // attach_file
-            $this->updateSort($this->status, $ctrl); // status
             $this->updateSort($this->cdate, $ctrl); // cdate
             $this->setStartRecordNumber(1); // Reset start position
         }
@@ -1128,13 +1137,13 @@ class DocJuzmatch2List extends DocJuzmatch2
                 $this->company_seal_email->setSort("");
                 $this->file_idcard->setSort("");
                 $this->file_house_regis->setSort("");
+                $this->file_loan->setSort("");
                 $this->file_other->setSort("");
                 $this->contact_address->setSort("");
                 $this->contact_address2->setSort("");
                 $this->contact_email->setSort("");
                 $this->contact_lineid->setSort("");
                 $this->contact_phone->setSort("");
-                $this->file_loan->setSort("");
                 $this->attach_file->setSort("");
                 $this->status->setSort("");
                 $this->doc_creden_id->setSort("");
@@ -1181,18 +1190,6 @@ class DocJuzmatch2List extends DocJuzmatch2
         $item = &$this->ListOptions->add("edit");
         $item->CssClass = "text-nowrap";
         $item->Visible = $Security->canEdit();
-        $item->OnLeft = false;
-
-        // "copy"
-        $item = &$this->ListOptions->add("copy");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canAdd();
-        $item->OnLeft = false;
-
-        // "delete"
-        $item = &$this->ListOptions->add("delete");
-        $item->CssClass = "text-nowrap";
-        $item->Visible = $Security->canDelete();
         $item->OnLeft = false;
 
         // List actions
@@ -1262,23 +1259,6 @@ class DocJuzmatch2List extends DocJuzmatch2
             $editcaption = HtmlTitle($Language->phrase("EditLink"));
             if ($Security->canEdit()) {
                 $opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->EditUrl)) . "\">" . $Language->phrase("EditLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "copy"
-            $opt = $this->ListOptions["copy"];
-            $copycaption = HtmlTitle($Language->phrase("CopyLink"));
-            if ($Security->canAdd()) {
-                $opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode(GetUrl($this->CopyUrl)) . "\">" . $Language->phrase("CopyLink") . "</a>";
-            } else {
-                $opt->Body = "";
-            }
-
-            // "delete"
-            $opt = $this->ListOptions["delete"];
-            if ($Security->canDelete()) {
-                $opt->Body = "<a class=\"ew-row-link ew-delete\" data-ew-action=\"\" title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode(GetUrl($this->DeleteUrl)) . "\">" . $Language->phrase("DeleteLink") . "</a>";
             } else {
                 $opt->Body = "";
             }
@@ -1388,13 +1368,12 @@ class DocJuzmatch2List extends DocJuzmatch2
             $option->add("juzmatch_authority2_email", $this->createColumnOption("juzmatch_authority2_email"));
             $option->add("company_seal_name", $this->createColumnOption("company_seal_name"));
             $option->add("company_seal_email", $this->createColumnOption("company_seal_email"));
+            $option->add("file_loan", $this->createColumnOption("file_loan"));
             $option->add("contact_address", $this->createColumnOption("contact_address"));
             $option->add("contact_address2", $this->createColumnOption("contact_address2"));
             $option->add("contact_email", $this->createColumnOption("contact_email"));
             $option->add("contact_lineid", $this->createColumnOption("contact_lineid"));
             $option->add("contact_phone", $this->createColumnOption("contact_phone"));
-            $option->add("attach_file", $this->createColumnOption("attach_file"));
-            $option->add("status", $this->createColumnOption("status"));
             $option->add("cdate", $this->createColumnOption("cdate"));
         }
 
@@ -1691,6 +1670,8 @@ class DocJuzmatch2List extends DocJuzmatch2
         $this->file_idcard->setDbValue($this->file_idcard->Upload->DbValue);
         $this->file_house_regis->Upload->DbValue = $row['file_house_regis'];
         $this->file_house_regis->setDbValue($this->file_house_regis->Upload->DbValue);
+        $this->file_loan->Upload->DbValue = $row['file_loan'];
+        $this->file_loan->setDbValue($this->file_loan->Upload->DbValue);
         $this->file_other->Upload->DbValue = $row['file_other'];
         $this->file_other->setDbValue($this->file_other->Upload->DbValue);
         $this->contact_address->setDbValue($row['contact_address']);
@@ -1698,7 +1679,6 @@ class DocJuzmatch2List extends DocJuzmatch2
         $this->contact_email->setDbValue($row['contact_email']);
         $this->contact_lineid->setDbValue($row['contact_lineid']);
         $this->contact_phone->setDbValue($row['contact_phone']);
-        $this->file_loan->setDbValue($row['file_loan']);
         $this->attach_file->setDbValue($row['attach_file']);
         $this->status->setDbValue($row['status']);
         $this->doc_creden_id->setDbValue($row['doc_creden_id']);
@@ -1764,13 +1744,13 @@ class DocJuzmatch2List extends DocJuzmatch2
         $row['company_seal_email'] = null;
         $row['file_idcard'] = null;
         $row['file_house_regis'] = null;
+        $row['file_loan'] = null;
         $row['file_other'] = null;
         $row['contact_address'] = null;
         $row['contact_address2'] = null;
         $row['contact_email'] = null;
         $row['contact_lineid'] = null;
         $row['contact_phone'] = null;
-        $row['file_loan'] = null;
         $row['attach_file'] = null;
         $row['status'] = null;
         $row['doc_creden_id'] = null;
@@ -1910,6 +1890,8 @@ class DocJuzmatch2List extends DocJuzmatch2
 
         // file_house_regis
 
+        // file_loan
+
         // file_other
 
         // contact_address
@@ -1922,11 +1904,11 @@ class DocJuzmatch2List extends DocJuzmatch2
 
         // contact_phone
 
-        // file_loan
-
         // attach_file
+        $this->attach_file->CellCssStyle = "white-space: nowrap;";
 
         // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // doc_creden_id
         $this->doc_creden_id->CellCssStyle = "white-space: nowrap;";
@@ -2120,6 +2102,15 @@ class DocJuzmatch2List extends DocJuzmatch2
             $this->company_seal_email->ViewValue = $this->company_seal_email->CurrentValue;
             $this->company_seal_email->ViewCustomAttributes = "";
 
+            // file_loan
+            $this->file_loan->UploadPath = "/upload/";
+            if (!EmptyValue($this->file_loan->Upload->DbValue)) {
+                $this->file_loan->ViewValue = $this->file_loan->Upload->DbValue;
+            } else {
+                $this->file_loan->ViewValue = "";
+            }
+            $this->file_loan->ViewCustomAttributes = "";
+
             // contact_address
             $this->contact_address->ViewValue = $this->contact_address->CurrentValue;
             $this->contact_address->ViewCustomAttributes = "";
@@ -2139,18 +2130,6 @@ class DocJuzmatch2List extends DocJuzmatch2
             // contact_phone
             $this->contact_phone->ViewValue = $this->contact_phone->CurrentValue;
             $this->contact_phone->ViewCustomAttributes = "";
-
-            // attach_file
-            $this->attach_file->ViewValue = $this->attach_file->CurrentValue;
-            $this->attach_file->ViewCustomAttributes = "";
-
-            // status
-            if (strval($this->status->CurrentValue) != "") {
-                $this->status->ViewValue = $this->status->optionCaption($this->status->CurrentValue);
-            } else {
-                $this->status->ViewValue = null;
-            }
-            $this->status->ViewCustomAttributes = "";
 
             // cdate
             $this->cdate->ViewValue = $this->cdate->CurrentValue;
@@ -2350,6 +2329,12 @@ class DocJuzmatch2List extends DocJuzmatch2
             $this->company_seal_email->HrefValue = "";
             $this->company_seal_email->TooltipValue = "";
 
+            // file_loan
+            $this->file_loan->LinkCustomAttributes = "";
+            $this->file_loan->HrefValue = "";
+            $this->file_loan->ExportHrefValue = $this->file_loan->UploadPath . $this->file_loan->Upload->DbValue;
+            $this->file_loan->TooltipValue = "";
+
             // contact_address
             $this->contact_address->LinkCustomAttributes = "";
             $this->contact_address->HrefValue = "";
@@ -2374,16 +2359,6 @@ class DocJuzmatch2List extends DocJuzmatch2
             $this->contact_phone->LinkCustomAttributes = "";
             $this->contact_phone->HrefValue = "";
             $this->contact_phone->TooltipValue = "";
-
-            // attach_file
-            $this->attach_file->LinkCustomAttributes = "";
-            $this->attach_file->HrefValue = "";
-            $this->attach_file->TooltipValue = "";
-
-            // status
-            $this->status->LinkCustomAttributes = "";
-            $this->status->HrefValue = "";
-            $this->status->TooltipValue = "";
 
             // cdate
             $this->cdate->LinkCustomAttributes = "";

@@ -659,6 +659,7 @@ class DocJuzmatch1 extends DbTable
             'TEXT'
         );
         $this->company_seal_name->InputTextType = "text";
+        // $this->company_seal_email->Required = true; // Required field
         $this->Fields['company_seal_name'] = &$this->company_seal_name;
 
         // company_seal_email
@@ -681,6 +682,7 @@ class DocJuzmatch1 extends DbTable
             'TEXT'
         );
         $this->company_seal_email->InputTextType = "text";
+        // $this->company_seal_email->Required = true; // Required field
         $this->Fields['company_seal_email'] = &$this->company_seal_email;
 
         // service_price
@@ -948,6 +950,7 @@ class DocJuzmatch1 extends DbTable
             'FILE'
         );
         $this->file_idcard->InputTextType = "text";
+        // $this->file_idcard->Required = true; // Required field
         $this->file_idcard->UploadPath = "/upload/";
         $this->Fields['file_idcard'] = &$this->file_idcard;
 
@@ -971,6 +974,7 @@ class DocJuzmatch1 extends DbTable
             'FILE'
         );
         $this->file_house_regis->InputTextType = "text";
+        // $this->file_house_regis->Required = true; // Required field
         $this->file_house_regis->UploadPath = "/upload/";
         $this->Fields['file_house_regis'] = &$this->file_house_regis;
 
@@ -994,6 +998,7 @@ class DocJuzmatch1 extends DbTable
             'FILE'
         );
         $this->file_titledeed->InputTextType = "text";
+        // $this->file_titledeed->Required = true; // Required field
         $this->file_titledeed->UploadPath = "/upload/";
         $this->Fields['file_titledeed'] = &$this->file_titledeed;
 
@@ -1040,6 +1045,7 @@ class DocJuzmatch1 extends DbTable
             'TEXT'
         );
         $this->attach_file->InputTextType = "text";
+        $this->attach_file->Sortable = false; // Allow sort
         $this->Fields['attach_file'] = &$this->attach_file;
 
         // status
@@ -1062,6 +1068,7 @@ class DocJuzmatch1 extends DbTable
             'SELECT'
         );
         $this->status->InputTextType = "text";
+        $this->status->Sortable = false; // Allow sort
         $this->status->UsePleaseSelect = true; // Use PleaseSelect by default
         $this->status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
         $this->status->Lookup = new Lookup('status', 'doc_juzmatch1', false, '', ["","","",""], [], [], [], [], [], [], '', '', "");
@@ -1115,7 +1122,7 @@ class DocJuzmatch1 extends DbTable
         $this->buyer_booking_asset_id->InputTextType = "text";
         $this->buyer_booking_asset_id->IsForeignKey = true; // Foreign key field
         $this->buyer_booking_asset_id->Nullable = false; // NOT NULL field
-        $this->buyer_booking_asset_id->Required = true; // Required field
+        // $this->buyer_booking_asset_id->Required = true; // Required field
         $this->buyer_booking_asset_id->Sortable = false; // Allow sort
         $this->buyer_booking_asset_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
         $this->Fields['buyer_booking_asset_id'] = &$this->buyer_booking_asset_id;
@@ -2358,8 +2365,10 @@ class DocJuzmatch1 extends DbTable
         // file_other
 
         // attach_file
+        $this->attach_file->CellCssStyle = "white-space: nowrap;";
 
         // status
+        $this->status->CellCssStyle = "white-space: nowrap;";
 
         // doc_date
         $this->doc_date->CellCssStyle = "white-space: nowrap;";
@@ -3382,8 +3391,6 @@ class DocJuzmatch1 extends DbTable
                     $doc->exportCaption($this->file_house_regis);
                     $doc->exportCaption($this->file_titledeed);
                     $doc->exportCaption($this->file_other);
-                    $doc->exportCaption($this->attach_file);
-                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->cdate);
                 } else {
                     $doc->exportCaption($this->document_date);
@@ -3417,8 +3424,6 @@ class DocJuzmatch1 extends DbTable
                     $doc->exportCaption($this->contact_email);
                     $doc->exportCaption($this->contact_lineid);
                     $doc->exportCaption($this->contact_phone);
-                    $doc->exportCaption($this->attach_file);
-                    $doc->exportCaption($this->status);
                     $doc->exportCaption($this->cdate);
                     $doc->exportCaption($this->cuser);
                     $doc->exportCaption($this->cip);
@@ -3493,8 +3498,6 @@ class DocJuzmatch1 extends DbTable
                         $doc->exportField($this->file_house_regis);
                         $doc->exportField($this->file_titledeed);
                         $doc->exportField($this->file_other);
-                        $doc->exportField($this->attach_file);
-                        $doc->exportField($this->status);
                         $doc->exportField($this->cdate);
                     } else {
                         $doc->exportField($this->document_date);
@@ -3528,8 +3531,6 @@ class DocJuzmatch1 extends DbTable
                         $doc->exportField($this->contact_email);
                         $doc->exportField($this->contact_lineid);
                         $doc->exportField($this->contact_phone);
-                        $doc->exportField($this->attach_file);
-                        $doc->exportField($this->status);
                         $doc->exportField($this->cdate);
                         $doc->exportField($this->cuser);
                         $doc->exportField($this->cip);
